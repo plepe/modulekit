@@ -9,7 +9,7 @@
 <p>
 This page demonstrates the use of the 'modulekit' framework. First initialize your project by running the following commands:
 <pre>
-git clone https://github.com/plepe/modulekit.git
+git submodule add https://github.com/plepe/modulekit.git modulekit
 mkdir modules/
 </pre>
 
@@ -28,7 +28,7 @@ This clones the framework into the modulekit/-directory and the initializes the 
 <p>
 Commands to use, to include submodules:<br>
 <pre>
-git submodule add git://github.com/plepe/Form.git modules/form
+git submodule add https://github.com/plepe/Form.git modules/form
 git add .gitmodules modules/form
 git commit
 </pre>
