@@ -1,4 +1,4 @@
-<?php include "inc/loader.php"; /* loads all php-includes */?>
+<?php include "loader.php"; /* loads all php-includes */?>
 <html>
 <head>
   <title>Framework Test</title>
@@ -7,17 +7,17 @@
 </head>
 <body>
 <p>
-This page demonstrates the use of the framework. Clone the submodules into the inc/-directory, e.g.:
+This page demonstrates the use of the framework. Clone the framework into the inc/-directory and the submodules into subdirectories of the inc/-directory, e.g.:
 <ul>
   <li>/<ul>
-    <li>inc/<ul>
-      <li>form/ ...</li>
-      <li>lang/ ...</li>
+    <li>inc/ - this library<ul>
+      <li>form/ ... - as an example the form/-library</li>
+      <li>lang/ ... - as an example the lang/-library</li>
     </ul>
   </ul>
 </ul>
 <p>
-Commands to use to clone submodules:<br>
+Commands to use, to clone submodules:<br>
 <pre>
 git submodule add git://github.com/plepe/Form.git inc/form
 git add .gitmodules inc/form
