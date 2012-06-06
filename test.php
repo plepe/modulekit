@@ -28,8 +28,8 @@ This clones the framework into the inc/-directory and the initializes the module
 <p>
 Commands to use, to include submodules:<br>
 <pre>
-git submodule add git://github.com/plepe/Form.git inc/form
-git add .gitmodules inc/form
+git submodule add git://github.com/plepe/Form.git modules/form
+git add .gitmodules modules/form
 git commit
 </pre>
 
@@ -37,7 +37,7 @@ git commit
 The modules should have the following structure:
 <ul>
   <li>/ - All files in the root-directory are ignored, it may contain examples, licence information, ...
-  <li>src/ - The src-directory contains all source code of the submodule. They will be included when the according function in the framework is called. See example below.
+  <li>src/ - The src-directory contains all included source code of the submodule. They will be included when the according function in the framework is called. See example below.
   <li>modules/ - Submodules this module uses if it used standalone. You should provide these submodules in your project. See the submodule's READMEs for more information. Will not be included by the framework.
 </ul>
 Therefore your project can be used as submodule for another project.
