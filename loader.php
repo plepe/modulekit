@@ -2,10 +2,24 @@
 $modulekit_modules=array();
 $modulekit_order=array();
 
-function modulekit_include_js() {
+function modulekit_include_js($suffix="") {
+  $ret="";
+
+  foreach(modulekit_build_include_list("js") as $file) {
+    $ret.="<script type='text/javascript' src=\"{$file}{$suffix}\"></script>\n";
+  }
+
+  return $ret;
 }
 
-function modulekit_include_css() {
+function modulekit_include_css($suffix="") {
+  $ret="";
+
+  foreach(modulekit_build_include_list("css") as $file) {
+    $ret.="<link rel='stylesheet' type='text/css' href=\"{$file}{$suffix}\">\n";
+  }
+
+  return $ret;
 }
 
 function modulekit_load_module($module, $path) {
@@ -52,14 +66,15 @@ function modulekit_file($module, $path) {
   return "{$modulekit_modules[$module]['path']}/{$path}";
 }
 
-function modulekit_build_include_php() {
+function modulekit_build_include_list($type) {
   global $modulekit_order;
   global $modulekit_modules;
+  $k="include_{$type}";
   $list=array();
 
   foreach($modulekit_order as $m) {
-    if(isset($modulekit_modules[$m]['include_php']))
-      foreach($modulekit_modules[$m]['include_php'] as $f) {
+    if(isset($modulekit_modules[$m][$k]))
+      foreach($modulekit_modules[$m][$k] as $f) {
 	$list[]=modulekit_file($m, $f);
       }
   }
@@ -79,7 +94,7 @@ function modulekit_load() {
   }
 
   modulekit_resolve_depend("");
-  return modulekit_build_include_php();
+  return modulekit_build_include_list("php");
 }
 
 foreach(modulekit_load() as $file) {
