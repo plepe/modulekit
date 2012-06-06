@@ -1,6 +1,6 @@
 <?
-function framework_include_js() {
+function modulekit_include_js() {
 }
 
-function framework_include_css() {
+function modulekit_include_css() {
 }
