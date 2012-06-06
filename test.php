@@ -7,17 +7,26 @@
 </head>
 <body>
 <p>
-This page demonstrates the use of the framework. Clone the framework into the inc/-directory and the submodules into subdirectories of the inc/-directory, e.g.:
+This page demonstrates the use of the framework. First initialize your project by running the following commands:
+<pre>
+mkdir inc/
+git clone https://github.com/plepe/inc.git inc
+mkdir modules/
+</pre>
+
+This clones the framework into the inc/-directory and the initializes the modules/-directory, where the submodules will be placed. This is the basic structure for your project:
 <ul>
   <li>/<ul>
-    <li>inc/ - this library<ul>
+    <li>inc/ - the inc-library</li>
+    <li>modules/ - submodules this project uses<ul>
       <li>form/ ... - as an example the form/-library</li>
       <li>lang/ ... - as an example the lang/-library</li>
     </ul>
+    <li>src/ - Sourcecode for this project</li>
   </ul>
 </ul>
 <p>
-Commands to use, to clone submodules:<br>
+Commands to use, to include submodules:<br>
 <pre>
 git submodule add git://github.com/plepe/Form.git inc/form
 git add .gitmodules inc/form
@@ -28,9 +37,10 @@ git commit
 The modules should have the following structure:
 <ul>
   <li>/ - All files in the root-directory are ignored, it may contain examples, licence information, ...
-  <li>inc/ - The inc-directory contains all source code of the submodule. They will be included when the according function in the framework is called. See example below.
-  <li>lib/ - Functions which are necessary to use the submodule stand-alone, but might be included in several modules. See the submodule's READMEs for more information.
+  <li>src/ - The src-directory contains all source code of the submodule. They will be included when the according function in the framework is called. See example below.
+  <li>modules/ - Submodules this module uses if it used standalone. You should provide these submodules in your project. See the submodule's READMEs for more information. Will not be included by the framework.
 </ul>
+Therefore your project can be used as submodule for another project.
 
 <p>
 Example source code:
