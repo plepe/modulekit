@@ -49,6 +49,9 @@ The modulekit.php:
 &lt;?php
 $name="Name of this project/module";
 
+// an ID to identify this module
+$id="id";
+
 // these modules should be loaded first
 $depend=array("form", "lang");
 
@@ -79,5 +82,10 @@ Example source code:
   &lt;/body&gt;
 &lt;/html&gt;
 </pre>
+
+<h3>Functions</h3>
+<h4><tt>modulekit_file($module, $path)</tt></h4>
+Returns a relative path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/<b>id</b>/-path).
+
 </body>
 </html>

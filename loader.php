@@ -1,6 +1,7 @@
 <?
 $modulekit_modules=array();
 $modulekit_order=array();
+$modulekit_aliases=array();
 
 function modulekit_include_js($suffix="") {
   $ret="";
@@ -24,14 +25,22 @@ function modulekit_include_css($suffix="") {
 
 function modulekit_load_module($module, $path) {
   global $modulekit_modules;
+  global $modulekit_aliases;
+
   $data=array(
     'path'=>$path
   );
 
   @include "$path/modulekit.php";
 
+  $modulekit_aliases[$module]=$module;
+
   if(isset($name))
     $data['name']=$name;
+  if(isset($id)) {
+    $data['id']=$id;
+    $modulekit_aliases[$id]=$module;
+  }
   if(isset($depend))
     $data['depend']=$depend;
   if(isset($include_php))
@@ -42,6 +51,7 @@ function modulekit_load_module($module, $path) {
     $data['include_css']=$include_css;
 
   $modulekit_modules[$module]=$data;
+
   return $data;
 }
 
@@ -62,8 +72,9 @@ function modulekit_resolve_depend($module, $done=array()) {
 
 function modulekit_file($module, $path) {
   global $modulekit_modules;
+  global $modulekit_aliases;
 
-  return "{$modulekit_modules[$module]['path']}/{$path}";
+  return "{$modulekit_modules[$modulekit_aliases[$module]]['path']}/{$path}";
 }
 
 function modulekit_build_include_list($type) {
