@@ -2,6 +2,7 @@
 $modulekit_modules=array();
 $modulekit_order=array();
 $modulekit_aliases=array();
+$modulekit_inclist=array();
 
 function modulekit_include_js($suffix="") {
   $ret="";
@@ -108,6 +109,24 @@ function modulekit_load() {
   return modulekit_build_include_list("php");
 }
 
-foreach(modulekit_load() as $file) {
+# If cache file is found then read configuration from there
+if(file_exists(".modulekit-cache/globals")) {
+  $data=unserialize(file_get_contents(".modulekit-cache/globals"));
+
+  foreach($data as $k=>$v) {
+    $$k=$v;
+  }
+
+  unset($data);
+  unset($k);
+  unset($v);
+}
+# No? Re-Build configuration
+else {
+  $modulekit_inclist=modulekit_load();
+}
+
+# Include all include files
+foreach($modulekit_inclist as $file) {
   include_once($file);
 }

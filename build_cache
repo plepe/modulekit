@@ -1,0 +1,21 @@
+#!/usr/bin/php
+<?
+# Call this script from the root of your project (like "modulekit/build_cache")
+
+# First clean old cache
+@mkdir(".modulekit-cache");
+unlink(".modulekit-cache/globals");
+
+# Call the loader, which sets a couple of globals
+include "loader.php";
+
+# Compile into a single variable
+$data=array(
+  'modulekit_modules'	=>$modulekit_modules,
+  'modulekit_order'	=>$modulekit_order,
+  'modulekit_aliases'	=>$modulekit_aliases,
+  'modulekit_inclist'	=>$modulekit_inclist,
+);
+
+# Write variable to globals
+file_put_contents(".modulekit-cache/globals", serialize($data));
