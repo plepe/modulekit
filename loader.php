@@ -109,5 +109,5 @@ function modulekit_load() {
 }
 
 foreach(modulekit_load() as $file) {
-  include $file;
+  include_once($file);
 }
