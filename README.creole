@@ -1,0 +1,78 @@
+== About ==
+When starting new projects I always kept copying useful code from my last projects. Over time this started to annoy me as I always kept improving that shared code but usually didn't copy back. So I had copies of more or less the same code in different repositories.
+
+As I'm a passionate user of Git for quite some time, I thought there must be a better way and finally I found the Git submodules. When starting to use those submodules I defined a structure to simplify sharing those modules between those projects - called 'modulekit'. I like to keep the modules small and simple.
+
+The basic module is the repository you are looking at right now, which handles loading of modules, solving dependencies between the modules and some more general functions.
+
+== Structure ==
+Files/directories in every project/module:
+
+* modulekit.php - Definition of the project/module, list of include files, dependencies.
+* inc/ - Include files for this project or if loaded as a submodule
+* modules/ - submodules this project uses
+** base/ - for example the modulekit-base library
+** form/ - or the modulekit-form library
+* modulekit/ - this basic 'modulekit' submodule (the very code you are reading right now)
+
+Therefore files in the root directory of the project/module will be ignored by modulekit; you can have example-code there and a README or the index.php of your project. It even allows you to use your project as submodule for another project.
+
+== Work with the modulekit ==
+=== Include 'modulekit' in your project ===
+To start using modulekit, run the following commands. This clones the framework into the modulekit/-directory and the initializes the modules/-directory, where the submodules will be placed:
+{{{
+git submodule add https://github.com/plepe/modulekit.git modulekit
+mkdir modules/
+}}}
+
+Create a modulekit.php-file:
+{{{
+<?php
+$name="Name of this project/module";
+
+// an ID to identify this module
+$id="id";
+
+// these modules should be loaded first
+$depend=array("form", "lang");
+
+// these files will be included in this order:
+$include_php=array(
+  "inc/file1.php",
+  "inc/file2.php",
+);
+$include_js=array(
+  "inc/a_js_file.js",
+);
+$include_css=array(
+  "inc/a_css_file.css",
+);
+}}}
+
+Example-code for an index.php-file:
+{{{
+<?php include "modulekit/loader.php"; /* loads all php-includes */ ?>
+<html>
+  <head>
+    <title>Framework Example</title>
+    <?php modulekit_include_js(); /* prints all js-includes */ ?>
+    <?php modulekit_include_css(); /* prints all css-includes */ ?>
+  </head>
+  <body>
+  </body>
+</html>
+}}}
+
+=== Adding additional submodules ===
+If you want to add an additional submodule run the following commands:
+{{{
+git submodule add https://github.com/plepe/modulekit-form.git modules/form
+git add .gitmodules modules/form
+git commit
+}}}
+
+If a module depends on more submodules, you don't add them to the submodule's modules-directory, but to the modules directory of your project.
+
+== Functions defined by 'modulekit' ==
+=== modulekit_file($module, $path) ===
+Returns a relative path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/**id**/-path).
