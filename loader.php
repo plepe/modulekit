@@ -3,7 +3,6 @@ $modulekit=array(
   'modules'	=>array(),
   'order'	=>array(),
   'aliases'	=>array(),
-  'inclist'	=>array(),
 );
 
 function modulekit_include_js($suffix="") {
@@ -39,10 +38,14 @@ function modulekit_load_module($module, $path) {
 
   if(isset($name))
     $data['name']=$name;
+
   if(isset($id)) {
-    $data['id']=$id;
-    $modulekit['aliases'][$id]=$module;
+    $modulekit['aliases'][$module]=$id;
+    $module=$id;
   }
+  $data['id']=$module;
+  $modulekit['aliases'][$module]=$module;
+
   if(isset($depend))
     $data['depend']=$depend;
   if(isset($include_php))
@@ -61,14 +64,14 @@ function modulekit_resolve_depend($module, $done=array()) {
   global $modulekit;
   $done[]=$module;
 
-  $data=$modulekit['modules'][$module];
+  $data=$modulekit['modules'][$modulekit['aliases'][$module]];
 
   if(isset($data['depend'])&&is_array($data['depend']))
     foreach($data['depend'] as $m)
       if(!in_array($m, $done))
 	modulekit_resolve_depend($m, &$done);
 
-  $modulekit['order'][]=$module;
+  $modulekit['order'][]=$data['id'];
 }
 
 function modulekit_file($module, $path) {
@@ -104,7 +107,6 @@ function modulekit_load() {
   }
 
   modulekit_resolve_depend("");
-  return modulekit_build_include_list("php");
 }
 
 # If cache file is found then read configuration from there
@@ -113,10 +115,10 @@ if(file_exists(".modulekit-cache/globals")) {
 }
 # No? Re-Build configuration
 else {
-  $modulekit['inclist']=modulekit_load();
+  modulekit_load();
 }
 
 # Include all include files
-foreach($modulekit['inclist'] as $file) {
+foreach(modulekit_build_include_list("php") as $file) {
   include_once($file);
 }
