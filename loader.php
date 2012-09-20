@@ -32,8 +32,6 @@ function modulekit_load_module($module, $path) {
     'path'=>$path
   );
 
-  $include=array();
-
   @include "$path/modulekit.php";
 
   $modulekit['aliases'][$module]=$module;
@@ -50,6 +48,9 @@ function modulekit_load_module($module, $path) {
 
   if(isset($depend))
     $data['depend']=$depend;
+
+  if(!$include)
+    $include=array();
   $data['include']=$include;
 
   // compatibility

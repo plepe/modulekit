@@ -37,6 +37,7 @@ $id="id";
 $depend=array("form", "lang");
 
 // these files will be included in this order:
+$include=array();
 $include['php']=array(
   "inc/file1.php",
   "inc/file2.php",
