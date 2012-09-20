@@ -62,6 +62,17 @@ function modulekit_load_module($module, $path) {
 
   $modulekit['modules'][$module]=$data;
 
+  if(is_dir("{$path}/modules")) {
+    $modules_dir=opendir("{$path}/modules/");
+    while($module=readdir($modules_dir)) {
+      if(substr($module, 0, 1)==".")
+	continue;
+
+      if(is_dir("{$path}/modules/{$module}"))
+	modulekit_load_module($module, "{$path}/modules/$module");
+    }
+  }
+
   return $data;
 }
 
@@ -101,14 +112,6 @@ function modulekit_build_include_list($type) {
 
 function modulekit_load() {
   modulekit_load_module("", ".");
-
-  $modules_dir=opendir("modules/");
-  while($module=readdir($modules_dir)) {
-    if(substr($module, 0, 1)==".")
-      continue;
-
-    modulekit_load_module($module, "modules/$module");
-  }
 
   modulekit_resolve_depend("");
 }
