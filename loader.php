@@ -32,6 +32,8 @@ function modulekit_load_module($module, $path) {
     'path'=>$path
   );
 
+  $include=array();
+
   @include "$path/modulekit.php";
 
   $modulekit['aliases'][$module]=$module;
@@ -48,12 +50,15 @@ function modulekit_load_module($module, $path) {
 
   if(isset($depend))
     $data['depend']=$depend;
+  $data['include']=$include;
+
+  // compatibility
   if(isset($include_php))
-    $data['include_php']=$include_php;
+    $data['include']['php']=$include_php;
   if(isset($include_js))
-    $data['include_js']=$include_js;
+    $data['include']['js']=$include_js;
   if(isset($include_css))
-    $data['include_css']=$include_css;
+    $data['include']['css']=$include_css;
 
   $modulekit['modules'][$module]=$data;
 
@@ -82,12 +87,11 @@ function modulekit_file($module, $path) {
 
 function modulekit_build_include_list($type) {
   global $modulekit;
-  $k="include_{$type}";
   $list=array();
 
   foreach($modulekit['order'] as $m) {
-    if(isset($modulekit['modules'][$m][$k]))
-      foreach($modulekit['modules'][$m][$k] as $f) {
+    if(isset($modulekit['modules'][$m]['include'][$type]))
+      foreach($modulekit['modules'][$m]['include'][$type] as $f) {
 	$list[]=modulekit_file($m, $f);
       }
   }

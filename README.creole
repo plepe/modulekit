@@ -37,14 +37,14 @@ $id="id";
 $depend=array("form", "lang");
 
 // these files will be included in this order:
-$include_php=array(
+$include['php']=array(
   "inc/file1.php",
   "inc/file2.php",
 );
-$include_js=array(
+$include['js']=array(
   "inc/a_js_file.js",
 );
-$include_css=array(
+$include['css']=array(
   "inc/a_css_file.css",
 );
 }}}
