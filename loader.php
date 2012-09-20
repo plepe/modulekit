@@ -8,7 +8,7 @@ $modulekit=array(
 function modulekit_include_js($suffix="") {
   $ret="";
 
-  foreach(modulekit_build_include_list("js") as $file) {
+  foreach(modulekit_get_includes("js") as $file) {
     $ret.="<script type='text/javascript' src=\"{$file}{$suffix}\"></script>\n";
   }
 
@@ -18,7 +18,7 @@ function modulekit_include_js($suffix="") {
 function modulekit_include_css($suffix="") {
   $ret="";
 
-  foreach(modulekit_build_include_list("css") as $file) {
+  foreach(modulekit_get_includes("css") as $file) {
     $ret.="<link rel='stylesheet' type='text/css' href=\"{$file}{$suffix}\">\n";
   }
 
@@ -49,7 +49,7 @@ function modulekit_load_module($module, $path) {
   if(isset($depend))
     $data['depend']=$depend;
 
-  if(!$include)
+  if(!isset($include))
     $include=array();
   $data['include']=$include;
 
@@ -97,7 +97,7 @@ function modulekit_file($module, $path) {
   return "{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}/{$path}";
 }
 
-function modulekit_build_include_list($type) {
+function modulekit_get_includes($type) {
   global $modulekit;
   $list=array();
 
@@ -109,6 +109,11 @@ function modulekit_build_include_list($type) {
   }
 
   return $list;
+}
+
+function modulekit_build_include_list($type) {
+  trigger_error("modulekit_build_include_list() deprecated, use modulekit_get_includes() instead", E_USER_DEPRECATED);
+  return modulekit_get_includes($type);
 }
 
 function modulekit_load() {
@@ -127,6 +132,6 @@ else {
 }
 
 # Include all include files
-foreach(modulekit_build_include_list("php") as $file) {
+foreach(modulekit_get_includes("php") as $file) {
   include_once($file);
 }
