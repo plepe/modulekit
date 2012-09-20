@@ -43,7 +43,7 @@ $include['php']=array(
   "inc/file2.php",
 );
 $include['js']=array(
-  "inc/a_js_file.js",
+  "inc/*.js",
 );
 $include['css']=array(
   "inc/a_css_file.css",
@@ -63,6 +63,11 @@ Example-code for an index.php-file:
   </body>
 </html>
 }}}
+
+=== Notes ===
+Files included with $include may contain wildcards:
+e.g. *.php matches all files ending in .php .
+The files need to be in the inc/-directory
 
 === Adding additional submodules ===
 If you want to add an additional submodule run the following commands:

@@ -5,6 +5,55 @@ $modulekit=array(
   'aliases'	=>array(),
 );
 
+function modulekit_read_inc_files($basepath, $path=".") {
+  $list=array();
+
+  if(!is_dir("{$basepath}/{$path}"))
+    return array();
+
+  $d=opendir("{$basepath}/{$path}");
+  while($f=readdir($d)) {
+    if(substr($f, 0, 1)==".");
+    elseif(is_dir("{$basepath}/{$path}/{$f}")) {
+      $list=array_merge($list, modulekit_read_inc_files($basepath, "{$path}/{$f}"));
+    }
+    else {
+      $list[]="{$path}/{$f}";
+    }
+  }
+  closedir($d);
+
+  return $list;
+}
+
+function modulekit_files_match($files, $entry) {
+  $entry="/^".strtr($entry, array(
+    "."=>"\\.",
+    "*"=>"[^\\/]*",
+    "/"=>"\\/",
+    "?"=>"[^\\/]",
+  ))."$/";
+
+  return preg_grep($entry, $files);
+}
+
+function modulekit_process_inc_files($basepath, $include) {
+  $ret=array();
+
+  $files=modulekit_read_inc_files($basepath, "inc");
+  foreach($include as $type=>$list) {
+    $f=array();
+
+    foreach($list as $entry) {
+      $f=array_merge($f, modulekit_files_match($files, $entry));
+    }
+
+    $ret[$type]=array_unique($f);
+  }
+
+  return $ret;
+}
+
 function modulekit_include_js($suffix="") {
   $ret="";
 
@@ -50,8 +99,13 @@ function modulekit_load_module($module, $path) {
     $data['depend']=$depend;
 
   if(!isset($include))
-    $include=array();
-  $data['include']=$include;
+    $include=array(
+      'php'=>array("inc/*.php"),
+      'js'=>array("inc/*.js"),
+      'css'=>array("inc/*.css"),
+    );
+
+  $data['include']=modulekit_process_inc_files($path, $include);
 
   // compatibility
   if(isset($include_php))
