@@ -1,9 +1,5 @@
 <?
-$modulekit=array(
-  'modules'	=>array(),
-  'order'	=>array(),
-  'aliases'	=>array(),
-);
+unset($modulekit);
 
 function modulekit_read_inc_files($basepath, $path=".") {
   $list=array();
@@ -81,7 +77,7 @@ function modulekit_load_module($module, $path) {
     'path'=>$path
   );
 
-  @include "$path/modulekit.php";
+  include "$path/modulekit.php";
 
   $modulekit['aliases'][$module]=$module;
 
@@ -170,19 +166,38 @@ function modulekit_build_include_list($type) {
   return modulekit_get_includes($type);
 }
 
-function modulekit_load() {
+function modulekit_load($additional) {
   modulekit_load_module("", ".");
 
   modulekit_resolve_depend("");
+  foreach($additional as $add)
+    modulekit_resolve_depend($add);
 }
+
+# No additional modules? Set to empty array
+if(!isset($modulekit_load))
+  $modulekit_load=array();
 
 # If cache file is found then read configuration from there
 if(file_exists(".modulekit-cache/globals")) {
   $modulekit=unserialize(file_get_contents(".modulekit-cache/globals"));
+
+  # Check if list of modules-to-load has changed
+  print_r(array_diff($modulekit_load, $modulekit['load']));
+  if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
+    unset($modulekit);
 }
+
 # No? Re-Build configuration
-else {
-  modulekit_load();
+if(!isset($modulekit)) {
+  $modulekit=array(
+    'modules'	=>array(),
+    'order'	=>array(),
+    'aliases'	=>array(),
+    'load'	=>$modulekit_load,
+  );
+
+  modulekit_load($modulekit_load);
 }
 
 # Include all include files

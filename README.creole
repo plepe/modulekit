@@ -52,6 +52,7 @@ $include['css']=array(
 
 Example-code for an index.php-file:
 {{{
+<?php include "conf.php"; /* load a local configuration */ ?>
 <?php include "modulekit/loader.php"; /* loads all php-includes */ ?>
 <html>
   <head>
@@ -65,9 +66,8 @@ Example-code for an index.php-file:
 }}}
 
 === Notes ===
-Files included with $include may contain wildcards:
-e.g. *.php matches all files ending in .php .
-The files need to be in the inc/-directory
+* Files included with $include may contain wildcards: e.g. *.php matches all files ending in .php . The files need to be in the inc/-directory
+* You may define a variable $modulekit_load, which contains a list of modules to load (per default only those where a dependency of the main project is found will be loaded).
 
 === Adding additional submodules ===
 If you want to add an additional submodule run the following commands:

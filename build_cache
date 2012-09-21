@@ -2,6 +2,9 @@
 <?
 # Call this script from the root of your project (like "modulekit/build_cache")
 
+# If there's a conf.php, load it
+@include "conf.php";
+
 # First clean old cache
 @mkdir(".modulekit-cache");
 unlink(".modulekit-cache/globals");
