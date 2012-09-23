@@ -1,5 +1,12 @@
 <?
 unset($modulekit);
+if(!isset($modulekit_default_includes))
+  $modulekit_default_includes=
+    array(
+      'php'=>array("inc/*.php"),
+      'js'=>array("inc/*.js"),
+      'css'=>array("inc/*.css"),
+    );
 
 function modulekit_read_inc_files($basepath, $path=".") {
   $list=array();
@@ -94,12 +101,10 @@ function modulekit_load_module($module, $path) {
   if(isset($depend))
     $data['depend']=$depend;
 
-  if(!isset($include))
-    $include=array(
-      'php'=>array("inc/*.php"),
-      'js'=>array("inc/*.js"),
-      'css'=>array("inc/*.css"),
-    );
+  if(!isset($include)) {
+    global $modulekit_default_includes;
+    $include=$modulekit_default_includes;
+  }
 
   $data['include']=modulekit_process_inc_files($path, $include);
 
