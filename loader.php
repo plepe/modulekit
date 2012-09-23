@@ -8,7 +8,7 @@ if(!isset($modulekit_default_includes))
       'css'=>array("inc/*.css"),
     );
 
-function modulekit_read_inc_files($basepath, $path=".") {
+function modulekit_read_inc_files($basepath, $path="") {
   $list=array();
 
   if(!is_dir("{$basepath}/{$path}"))
@@ -17,11 +17,11 @@ function modulekit_read_inc_files($basepath, $path=".") {
   $d=opendir("{$basepath}/{$path}");
   while($f=readdir($d)) {
     if(substr($f, 0, 1)==".");
-    elseif(is_dir("{$basepath}/{$path}/{$f}")) {
-      $list=array_merge($list, modulekit_read_inc_files($basepath, "{$path}/{$f}"));
+    elseif(is_dir("{$basepath}/{$path}{$f}")) {
+      $list=array_merge($list, modulekit_read_inc_files($basepath, "{$path}{$f}/"));
     }
     else {
-      $list[]="{$path}/{$f}";
+      $list[]="{$path}{$f}";
     }
   }
   closedir($d);
@@ -43,7 +43,8 @@ function modulekit_files_match($files, $entry) {
 function modulekit_process_inc_files($basepath, $include) {
   $ret=array();
 
-  $files=modulekit_read_inc_files($basepath, "inc");
+  $files=modulekit_read_inc_files($basepath, "");
+
   foreach($include as $type=>$list) {
     $f=array();
 
