@@ -134,7 +134,7 @@ function modulekit_load_module($module, $path) {
   return $data;
 }
 
-function modulekit_resolve_depend($module, $done=array()) {
+function modulekit_resolve_depend($module, &$done) {
   global $modulekit;
   $done[]=$module;
 
@@ -143,7 +143,7 @@ function modulekit_resolve_depend($module, $done=array()) {
   if(isset($data['depend'])&&is_array($data['depend']))
     foreach($data['depend'] as $m)
       if(!in_array($m, $done))
-	modulekit_resolve_depend($m, &$done);
+	modulekit_resolve_depend($m, $done);
 
   $modulekit['order'][]=$data['id'];
 }
@@ -176,9 +176,10 @@ function modulekit_build_include_list($type) {
 function modulekit_load($additional) {
   modulekit_load_module("", ".");
 
-  modulekit_resolve_depend("");
+  $resolve_done=array();
+  modulekit_resolve_depend("", $resolve_done);
   foreach($additional as $add)
-    modulekit_resolve_depend($add);
+    modulekit_resolve_depend($add, $resolve_done);
 }
 
 # No additional modules? Set to empty array
