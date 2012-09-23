@@ -84,7 +84,8 @@ function modulekit_load_module($module, $path) {
     'path'=>$path
   );
 
-  include "$path/modulekit.php";
+  if(file_exists("$path/modulekit.php"))
+    require "$path/modulekit.php";
 
   $modulekit['aliases'][$module]=$module;
 
