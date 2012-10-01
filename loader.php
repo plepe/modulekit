@@ -148,10 +148,14 @@ function modulekit_resolve_depend($module, &$done) {
   $modulekit['order'][]=$data['id'];
 }
 
-function modulekit_file($module, $path) {
+function modulekit_file($module, $path, $absolute_path=false) {
   global $modulekit;
+  $prefix="";
 
-  return "{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}/{$path}";
+  if($absolute_path)
+    $prefix="{$modulekit['root_path']}/";
+
+  return "{$prefix}{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}/{$path}";
 }
 
 function modulekit_get_includes($type) {
@@ -203,6 +207,7 @@ if(!isset($modulekit)) {
     'order'	=>array(),
     'aliases'	=>array(),
     'load'	=>$modulekit_load,
+    'root_path'	=>dirname(dirname(__FILE__)),
   );
 
   modulekit_load($modulekit_load);

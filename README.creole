@@ -81,5 +81,5 @@ git commit
 If a module depends on more submodules, you don't add them to the submodule's modules-directory, but to the modules directory of your project.
 
 == Functions defined by 'modulekit' ==
-=== modulekit_file($module, $path) ===
-Returns a relative path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/**id**/-path).
+=== modulekit_file($module, $path, [$absolute_path]) ===
+Returns a relative (or absolute, if the third parameter is true) path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/**id**/-path).
