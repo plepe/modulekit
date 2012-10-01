@@ -186,6 +186,18 @@ function modulekit_load($additional) {
     modulekit_resolve_depend($add, $resolve_done);
 }
 
+function modulekit_loaded($module) {
+  global $modulekit;
+
+  if(isset($modulekit['aliases'][$module]))
+    $module=$modulekit['aliases'][$module];
+
+  if(!in_array($module, $modulekit['load']))
+    return false;
+
+  return true;
+}
+
 # No additional modules? Set to empty array
 if(!isset($modulekit_load))
   $modulekit_load=array();
