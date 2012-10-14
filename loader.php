@@ -211,7 +211,6 @@ if(file_exists(".modulekit-cache/globals")) {
   $modulekit=unserialize(file_get_contents(".modulekit-cache/globals"));
 
   # Check if list of modules-to-load has changed
-  print_r(array_diff($modulekit_load, $modulekit['load']));
   if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
     unset($modulekit);
 }
