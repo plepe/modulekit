@@ -152,7 +152,8 @@ function modulekit_resolve_depend($module, &$done) {
       if(!in_array($m, $done))
 	modulekit_resolve_depend($m, $done);
 
-  $modulekit['order'][]=$data['id'];
+  if(!in_array($data['id'], $modulekit['order']))
+    $modulekit['order'][]=$data['id'];
 }
 
 function modulekit_file($module, $path, $absolute_path=false) {
