@@ -67,7 +67,7 @@ Example-code for an index.php-file:
 
 === Notes ===
 * Files included with $include may contain wildcards: e.g. *.php matches all files ending in .php .
-** You can override the default $include file while setting a variable $modulekit_default_includes, e.g. $modulekit_default_includes=array('foo'=>array("inc/*.foo"));
+** You can override the default $include setting by defining a $default_include, e.g. $default_include=array('foo'=>array("inc/*.foo")) which will be valid for all (child) modules not setting a $include setting
 * You may define a variable $modulekit_load, which contains a list of modules to load (per default only those where a dependency of the main project is found will be loaded).
 
 === Adding additional submodules ===

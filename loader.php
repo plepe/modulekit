@@ -78,7 +78,7 @@ function modulekit_include_css($suffix="") {
   return $ret;
 }
 
-function modulekit_load_module($module, $path) {
+function modulekit_load_module($module, $path, $default_include=null) {
   global $modulekit;
 
   $data=array(
@@ -104,8 +104,12 @@ function modulekit_load_module($module, $path) {
     $data['depend']=$depend;
 
   if(!isset($include)) {
-    global $modulekit_default_includes;
-    $include=$modulekit_default_includes;
+    if($default_include!=null)
+      $include=$default_include;
+    else {
+      global $modulekit_default_includes;
+      $include=$modulekit_default_includes;
+    }
   }
 
   $data['include']=modulekit_process_inc_files($path, $include);
@@ -127,7 +131,7 @@ function modulekit_load_module($module, $path) {
 	continue;
 
       if(is_dir("{$path}/modules/{$module}"))
-	modulekit_load_module($module, "{$path}/modules/$module");
+	modulekit_load_module($module, "{$path}/modules/$module", $default_include);
     }
   }
 
