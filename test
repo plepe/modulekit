@@ -1,0 +1,17 @@
+#!/usr/bin/php
+<?
+# Make output of this script pipeable to other programs (like less)
+exec("stty cbreak");
+
+# Call this script from the root of your project (like "modulekit/test")
+# Prints list of modules, their files and other data to stdout
+
+# If there's a conf.php, load it
+@include "conf.php";
+
+# Call the loader, which sets a couple of globals; don't load files
+$modulekit_no_include=true;
+include "loader.php";
+
+# Print configuration to stdout
+print_r($modulekit);
