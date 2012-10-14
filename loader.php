@@ -142,6 +142,9 @@ function modulekit_resolve_depend($module, &$done) {
   global $modulekit;
   $done[]=$module;
 
+  if(!isset($modulekit['aliases'][$module]))
+    throw new Exception("Can't resolve dependencies: '$module' not defined.");
+
   $data=$modulekit['modules'][$modulekit['aliases'][$module]];
 
   if(isset($data['depend'])&&is_array($data['depend']))
