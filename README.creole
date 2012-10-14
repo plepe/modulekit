@@ -85,5 +85,7 @@ If a module depends on more submodules, you don't add them to the submodule's mo
 === modulekit_file($module, $path, [$absolute_path]) ===
 Returns a relative (or absolute, if the third parameter is true) path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/**id**/-path).
 
+* This function is also available in JavaScript, after calling "print modulekit_to_javascript()" 
+
 === modulekit_loaded($module) ===
 Returns true, if the given module is loaded.

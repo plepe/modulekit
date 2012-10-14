@@ -172,6 +172,8 @@ function modulekit_to_javascript() {
   // TODO: remove maybe unwanted information?
   $ret ="<script type='text/javascript'>\n";
   $ret.="var modulekit=".json_encode($modulekit).";\n";
+  $ret.="\n";
+  $ret.=file_get_contents(dirname(__FILE__)."/loader.js");
   $ret.="</script>\n";
 
   return $ret;
