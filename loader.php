@@ -166,6 +166,17 @@ function modulekit_file($module, $path, $absolute_path=false) {
   return "{$prefix}{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}/{$path}";
 }
 
+function modulekit_to_javascript() {
+  global $modulekit;
+
+  // TODO: remove maybe unwanted information?
+  $ret ="<script type='text/javascript'>\n";
+  $ret.="var modulekit=".json_encode($modulekit).";\n";
+  $ret.="</script>\n";
+
+  return $ret;
+}
+
 function modulekit_get_includes($type) {
   global $modulekit;
   $list=array();
