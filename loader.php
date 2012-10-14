@@ -226,6 +226,7 @@ if(!isset($modulekit)) {
 }
 
 # Include all include files
-foreach(modulekit_get_includes("php") as $file) {
-  include_once($file);
-}
+if((!isset($modulekit_no_include))||(!$modulekit_no_include))
+  foreach(modulekit_get_includes("php") as $file) {
+    include_once($file);
+  }
