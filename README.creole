@@ -114,3 +114,12 @@ to the href-property, e.g. to force reloading after a software update.
 Example: print modulekit_include_css(null, "?1f725ab");
 
 Available: PHP
+
+== Debugging ==
+You may define a variable $modulekit_debug for debugging purposes. $modulekit_debug may take the following values:
+* false/null/0/undefined: All debug information will be discarded.
+* true: All debug information will be printed to stderr.
+* a positive integer: Some debug information will be printed to stderr; the higher the value the more information you will get.
+* a callable: All debug information will be passed to the user-defined function. It will be passed a text and the level of the debug message.
+
+Debug messages printed to stderr by modulekit will be prepended by "modulekit(LX):" where X is the level of the message.

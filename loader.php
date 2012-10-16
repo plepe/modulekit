@@ -8,6 +8,20 @@ if(!isset($modulekit_default_includes))
       'css'=>array("inc/*.css"),
     );
 
+function modulekit_debug($text, $level) {
+  global $modulekit_debug;
+
+  if((!isset($modulekit_debug))||
+     (!$modulekit_debug))
+    return;
+
+  if(is_callable($modulekit_debug))
+    return call_user_func($modulekit_debug, $text, $level);
+
+  if(($modulekit_debug===true)||($modulekit_debug>=$level))
+    file_put_contents("php://stderr", "modulekit(L$level): $text\n");
+}
+
 function modulekit_read_inc_files($basepath, $path="") {
   $list=array();
 
@@ -86,6 +100,8 @@ function modulekit_include_css($include_index="css", $suffix="") {
 
 function modulekit_load_module($module, $path, $default_include=null) {
   global $modulekit;
+
+  modulekit_debug("Loading configuration for module '$module'", 2);
 
   $data=array(
     'path'=>$path
@@ -233,6 +249,8 @@ if(!isset($modulekit_load))
 if(file_exists(".modulekit-cache/globals")) {
   $modulekit=unserialize(file_get_contents(".modulekit-cache/globals"));
 
+  modulekit_debug("Loading configuration from cache", 1);
+
   # Check if list of modules-to-load has changed
   if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
     unset($modulekit);
@@ -248,6 +266,8 @@ if(!isset($modulekit)) {
     'root_path'	=>dirname(dirname(__FILE__)),
   );
 
+  modulekit_debug("Loading configuration from modules", 1);
+
   modulekit_load($modulekit_load);
 }
 
@@ -257,6 +277,7 @@ if((!isset($modulekit_no_include))||(!$modulekit_no_include)) {
     $modulekit_include_php="php";
 
   foreach(modulekit_get_includes($modulekit_include_php) as $file) {
+    modulekit_debug("Including {$modulekit_include_php} file  '$file'", 3);
     include_once($file);
   }
 }
