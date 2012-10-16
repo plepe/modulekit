@@ -58,8 +58,11 @@ function modulekit_process_inc_files($basepath, $include) {
   return $ret;
 }
 
-function modulekit_include_js($suffix="") {
+function modulekit_include_js($include_index="js", $suffix="") {
   $ret="";
+
+  if(!$include_index)
+    $include_index="js";
 
   foreach(modulekit_get_includes("js") as $file) {
     $ret.="<script type='text/javascript' src=\"{$file}{$suffix}\"></script>\n";
@@ -68,8 +71,11 @@ function modulekit_include_js($suffix="") {
   return $ret;
 }
 
-function modulekit_include_css($suffix="") {
+function modulekit_include_css($include_index="css", $suffix="") {
   $ret="";
+
+  if(!$include_index)
+    $include_index="css";
 
   foreach(modulekit_get_includes("css") as $file) {
     $ret.="<link rel='stylesheet' type='text/css' href=\"{$file}{$suffix}\">\n";
@@ -246,7 +252,11 @@ if(!isset($modulekit)) {
 }
 
 # Include all include files
-if((!isset($modulekit_no_include))||(!$modulekit_no_include))
-  foreach(modulekit_get_includes("php") as $file) {
+if((!isset($modulekit_no_include))||(!$modulekit_no_include)) {
+  if(!isset($modulekit_include_php))
+    $modulekit_include_php="php";
+
+  foreach(modulekit_get_includes($modulekit_include_php) as $file) {
     include_once($file);
   }
+}

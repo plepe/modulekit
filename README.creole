@@ -69,6 +69,7 @@ Example-code for an index.php-file:
 === Notes ===
 * Files included with $include may contain wildcards: e.g. *.php matches all files ending in .php .
 ** You can override the default $include setting by defining a $default_include, e.g. $default_include=array('foo'=>array("inc/*.foo")) which will be valid for all (child) modules not setting a $include setting
+* You can define additional indexes for the $include (resp. $default_include) array. To load all files belonging to a specific index define a variable $modulekit_include_php with the index as value before including "modulekit/loader.php", resp. pass it as first argument to modulekit_include_js() resp. modulekit_include_css().
 * You may define a variable $modulekit_load, which contains a list of modules to load (per default only those where a dependency of the main project is found will be loaded).
 
 === Adding additional submodules ===
@@ -89,3 +90,19 @@ Returns a relative (or absolute, if the third parameter is true) path to a file 
 
 === modulekit_loaded($module) ===
 Returns true, if the given module is loaded.
+
+=== modulekit_include_js($include_index="js", $suffix="") ===
+Returns a string with <script>-tags with all files listed in the
+$include-arrays of all to-be-loaded modules with the $include_index-index. If
+$include_index is missing or null, "js" will be used. $suffix will be appended
+to the src-property, e.g. to force reloading after a software update.
+
+Example: print modulekit_include_js(null, "?1f725ab");
+
+=== modulekit_include_css($include_index="css", $suffix="") ===
+Returns a string with <link rel='stylesheet'>-tags with all files listed in the
+$include-arrays of all to-be-loaded modules with the $include_index-index. If
+$include_index is missing or null, "js" will be used. $suffix will be appended
+to the href-property, e.g. to force reloading after a software update.
+
+Example: print modulekit_include_css(null, "?1f725ab");
