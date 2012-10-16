@@ -93,7 +93,7 @@ Available: PHP/JS
 === modulekit_loaded($module) ===
 Returns true, if the given module is loaded.
 
-Available: PHP
+Available: PHP/JS
 
 === modulekit_include_js($include_index="js", $suffix="") ===
 Returns a string with <script>-tags with all files listed in the
