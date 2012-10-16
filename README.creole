@@ -115,6 +115,11 @@ Example: print modulekit_include_css(null, "?1f725ab");
 
 Available: PHP
 
+=== modulekit_get_includes($include_index) ===
+Returns a list of all files listed in the $include-arrays with the $include_index-index.
+
+Available: PHP/JS
+
 == Debugging ==
 You may define a variable $modulekit_debug for debugging purposes. $modulekit_debug may take the following values:
 * false/null/0/undefined: All debug information will be discarded.
