@@ -88,8 +88,12 @@ Returns a relative (or absolute, if the third parameter is true) path to a file 
 
 * This function is also available in JavaScript, after calling "print modulekit_to_javascript()" 
 
+Available: PHP/JS
+
 === modulekit_loaded($module) ===
 Returns true, if the given module is loaded.
+
+Available: PHP
 
 === modulekit_include_js($include_index="js", $suffix="") ===
 Returns a string with <script>-tags with all files listed in the
@@ -99,6 +103,8 @@ to the src-property, e.g. to force reloading after a software update.
 
 Example: print modulekit_include_js(null, "?1f725ab");
 
+Available: PHP
+
 === modulekit_include_css($include_index="css", $suffix="") ===
 Returns a string with <link rel='stylesheet'>-tags with all files listed in the
 $include-arrays of all to-be-loaded modules with the $include_index-index. If
@@ -106,3 +112,5 @@ $include_index is missing or null, "js" will be used. $suffix will be appended
 to the href-property, e.g. to force reloading after a software update.
 
 Example: print modulekit_include_css(null, "?1f725ab");
+
+Available: PHP
