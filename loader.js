@@ -18,10 +18,16 @@ function modulekit_file(module, path) {
     path="";
 
   if((!modulekit)||
-     (!modulekit.modules)||
-     (!modulekit.modules[module])||
-     (!modulekit.modules[module].path))
+     (!modulekit.modules))
      return;
+
+  if((modulekit.aliases)&&
+     (modulekit.aliases[module]))
+    module=modulekit.aliases[module];
+
+  if((!modulekit.modules[module])||
+     (!modulekit.modules[module].path))
+    return;
 
   return modulekit.modules[module].path+"/"+path;
 }
