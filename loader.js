@@ -6,8 +6,8 @@ function modulekit_loaded(module) {
   if(modulekit.aliases[module])
     module=modulekit.aliases[module];
 
-  for(var i=0; i<modulekit.load.length; i++)
-    if(modulekit.load[i]==module)
+  for(var i=0; i<modulekit.order.length; i++)
+    if(modulekit.order[i]==module)
       return true;
 
   return false;

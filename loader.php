@@ -238,7 +238,7 @@ function modulekit_loaded($module) {
   if(isset($modulekit['aliases'][$module]))
     $module=$modulekit['aliases'][$module];
 
-  if(!in_array($module, $modulekit['load']))
+  if(!in_array($module, $modulekit['order']))
     return false;
 
   return true;
