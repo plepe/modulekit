@@ -91,7 +91,8 @@ Returns a relative (or absolute, if the third parameter is true) path to a file 
 Available: PHP/JS
 
 === modulekit_loaded($module) ===
-Returns true, if the given module is loaded.
+Returns the definition from modulekit.php, if the given module is loaded.
+Otherwise false.
 
 Available: PHP/JS
 

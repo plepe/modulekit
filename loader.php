@@ -241,7 +241,7 @@ function modulekit_loaded($module) {
   if(!in_array($module, $modulekit['order']))
     return false;
 
-  return true;
+  return $modulekit['modules'][$module];
 }
 
 # No additional modules? Set to empty array

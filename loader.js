@@ -8,7 +8,7 @@ function modulekit_loaded(module) {
 
   for(var i=0; i<modulekit.order.length; i++)
     if(modulekit.order[i]==module)
-      return true;
+      return modulekit.modules[module];
 
   return false;
 }
