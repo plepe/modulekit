@@ -103,12 +103,15 @@ function modulekit_load_module($module, $path, $default_include=null) {
 
   modulekit_debug("Loading configuration for module '$module'", 2);
 
-  $data=array(
-    'path'=>$path
-  );
-
   if(file_exists("$path/modulekit.php"))
     require "$path/modulekit.php";
+
+  // use all (newly) defined variables from modulekit.php
+  $data=get_defined_vars();
+
+  // remove all previously defined variables from $data, save "path"
+  foreach(array("modulekit", "data", "module", "default_include") as $k)
+    unset($data[$k]);
 
   $modulekit['aliases'][$module]=$module;
 
