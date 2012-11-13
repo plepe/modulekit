@@ -128,6 +128,10 @@ function modulekit_load_module($module, $path, $default_include=null) {
   if(isset($depend))
     $data['depend']=$depend;
 
+  $data['modules_path']="modules";
+  if(isset($modules_path))
+    $data['modules_path']=$modules_path;
+
   if(!isset($include)) {
     if($default_include!=null)
       $include=$default_include;
@@ -149,14 +153,14 @@ function modulekit_load_module($module, $path, $default_include=null) {
 
   $modulekit['modules'][$module]=$data;
 
-  if(is_dir("{$path}/modules")) {
-    $modules_dir=opendir("{$path}/modules/");
+  if(is_dir("{$path}/{$data['modules_path']}")) {
+    $modules_dir=opendir("{$path}/{$data['modules_path']}/");
     while($module=readdir($modules_dir)) {
       if(substr($module, 0, 1)==".")
 	continue;
 
-      if(is_dir("{$path}/modules/{$module}"))
-	modulekit_load_module($module, "{$path}/modules/$module", $default_include);
+      if(is_dir("{$path}/{$data['modules_path']}/{$module}"))
+	modulekit_load_module($module, "{$path}/{$data['modules_path']}/$module", $default_include);
     }
   }
 
