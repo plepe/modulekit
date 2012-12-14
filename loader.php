@@ -208,6 +208,19 @@ function modulekit_to_javascript() {
   return $ret;
 }
 
+function modulekit_includes($module, $type, $absolute_path=false) {
+  global $modulekit;
+  $prefix="";
+  $list=array();
+
+  if(isset($modulekit['modules'][$module]['include'][$type]))
+    foreach($modulekit['modules'][$module]['include'][$type] as $f) {
+      $list[]=modulekit_file($module, $f, $absolute_path);
+    }
+
+  return $list;
+}
+
 function modulekit_get_includes($type) {
   global $modulekit;
   $list=array();
