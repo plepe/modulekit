@@ -36,6 +36,10 @@ $id="id";
 // these modules should be loaded first
 $depend=array("form", "lang");
 
+// these modules will also be loaded if this module is loaded, but
+// (preferably) after this
+$load=array("foo");
+
 // these files will be included in this order:
 $include=array();
 $include['php']=array(
