@@ -97,6 +97,7 @@ function modulekit_include_js($include_index="js", $suffix=null) {
 }
 
 function modulekit_include_css($include_index="css", $suffix=null) {
+  global $modulekit;
   $ret="";
 
   if($suffix==null)
