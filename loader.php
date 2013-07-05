@@ -314,8 +314,11 @@ function modulekit_cache_invalid() {
 if(!isset($modulekit_load))
   $modulekit_load=array();
 
+if(!isset($modulekit_nocache))
+  $modulekit_nocache=false;
+
 # If cache file is found then read configuration from there
-if(file_exists(".modulekit-cache/globals")) {
+if((!$modulekit_nocache)&&(file_exists(".modulekit-cache/globals"))) {
   $modulekit=unserialize(file_get_contents(".modulekit-cache/globals"));
   $modulekit_is_cached=true;
 
@@ -343,7 +346,8 @@ if(!isset($modulekit)) {
 
   modulekit_load($modulekit_load);
 
-  $modulekit_is_cached=modulekit_build_cache();
+  if(!$modulekit_nocache)
+    $modulekit_is_cached=modulekit_build_cache();
 }
 
 # Include all include files

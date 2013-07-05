@@ -138,3 +138,5 @@ You may define a variable $modulekit_debug for debugging purposes. $modulekit_de
 * a callable: All debug information will be passed to the user-defined function. It will be passed a text and the level of the debug message.
 
 Debug messages printed to stderr by modulekit will be prepended by "modulekit(LX):" where X is the level of the message.
+
+Set $modulekit_nocache to true before including loader.php to disable caching.
