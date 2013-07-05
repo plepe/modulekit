@@ -112,6 +112,20 @@ function modulekit_include_css($include_index="css", $suffix=null) {
   return $ret;
 }
 
+function modulekit_module_is_empty($module, $path) {
+  $count=0;
+
+  $d=opendir($path);
+  while($f=readdir($d))
+    if(substr($f, 0, 1)!=".")
+      $count++;
+
+  if($count==0)
+    return true;
+
+  return false;
+}
+
 function modulekit_load_module($module, $path, $default_include=null) {
   global $modulekit;
 
@@ -119,6 +133,10 @@ function modulekit_load_module($module, $path, $default_include=null) {
 
   if(file_exists("$path/modulekit.php"))
     require "$path/modulekit.php";
+  // ignore empty directories
+  else
+    if(modulekit_module_is_empty($module, $path))
+      return;
 
   // use all (newly) defined variables from modulekit.php
   $data=get_defined_vars();
