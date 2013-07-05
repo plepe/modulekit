@@ -278,11 +278,33 @@ function modulekit_build_cache() {
   return true;
 }
 
+// You may define a $version in conf.php, e.g. "2.0.1"
+// If the current program is a git repository, the short SHA-1 of the current
+// HEAD will be appended as build metadata, e.g. "2.0.1+git.7bd9274"
+function modulekit_version() {
+  global $version;
+  $modulekit_version="";
+
+  if(!isset($version)) {
+    $modulekit_version.=$version;
+  }
+
+  $git_version=shell_exec('if [ "`which git`" != "" ] ; then echo `git rev-parse --short HEAD` ; fi 2> /dev/null');
+  $git_version=trim($git_version);
+  if($git_version)
+    $modulekit_version.="+git.{$git_version}";
+
+  return $modulekit_version;
+}
+
 function modulekit_cache_invalid() {
   global $modulekit;
   global $modulekit_load;
 
   if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
+    return true;
+
+  if(modulekit_version()!=$modulekit['version'])
     return true;
 
   return false;
@@ -309,6 +331,7 @@ if(file_exists(".modulekit-cache/globals")) {
 # No? Re-Build configuration
 if(!isset($modulekit)) {
   $modulekit=array(
+    'version'	=>modulekit_version(),
     'modules'	=>array(),
     'order'	=>array(),
     'aliases'	=>array(),
