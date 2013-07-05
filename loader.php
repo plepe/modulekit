@@ -278,6 +278,16 @@ function modulekit_build_cache() {
   return true;
 }
 
+function modulekit_cache_invalid() {
+  global $modulekit;
+  global $modulekit_load;
+
+  if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
+    return true;
+
+  return false;
+}
+
 # No additional modules? Set to empty array
 if(!isset($modulekit_load))
   $modulekit_load=array();
@@ -290,7 +300,7 @@ if(file_exists(".modulekit-cache/globals")) {
   modulekit_debug("Loading configuration from cache", 1);
 
   # Check if list of modules-to-load has changed
-  if(sizeof(array_diff($modulekit_load, $modulekit['load']))) {
+  if(modulekit_cache_invalid()) {
     unset($modulekit);
     $modulekit_is_cached=false;
   }
