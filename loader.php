@@ -296,6 +296,24 @@ function modulekit_build_cache() {
   }
   $modulekit['compiled']['js']="compiled.js";
 
+  // Concatenate all PHP files into one
+  @unlink(".modulekit-cache/compiled.php");
+  foreach(modulekit_get_includes("php") as $file) {
+    file_put_contents(".modulekit-cache/compiled.php",
+      $content=file_get_contents($file),
+      FILE_APPEND
+    );
+
+    // make sure every file ends with a php closing tag
+    $last_begin_tag=strrpos($content, "<"."?");
+    $last_end_tag=strrpos($content, "?".">");
+    if(($last_begin_tag!==false)&&
+      (($last_end_tag===false)||($last_end_tag<$last_begin_tag)))
+      file_put_contents(".modulekit-cache/compiled.php", "?".">\n",
+	FILE_APPEND);
+  }
+  $modulekit['compiled']['php']="compiled.php";
+
   # Write variable to globals
   file_put_contents(".modulekit-cache/globals", serialize($modulekit));
 
@@ -379,8 +397,14 @@ if((!isset($modulekit_no_include))||(!$modulekit_no_include)) {
   if(!isset($modulekit_include_php))
     $modulekit_include_php="php";
 
-  foreach(modulekit_get_includes($modulekit_include_php) as $file) {
-    modulekit_debug("Including {$modulekit_include_php} file  '$file'", 3);
-    include_once($file);
+  if(  isset($modulekit['compiled'])
+     &&isset($modulekit['compiled'][$modulekit_include_php])) {
+    include_once(".modulekit-cache/{$modulekit['compiled'][$modulekit_include_php]}");
+  }
+  else {
+    foreach(modulekit_get_includes($modulekit_include_php) as $file) {
+      modulekit_debug("Including {$modulekit_include_php} file  '$file'", 3);
+      include_once($file);
+    }
   }
 }
