@@ -72,9 +72,12 @@ function modulekit_process_inc_files($basepath, $include) {
   return $ret;
 }
 
-function modulekit_include_js($include_index="js", $suffix="") {
+function modulekit_include_js($include_index="js", $suffix=null) {
   global $modulekit;
   $ret="";
+
+  if($suffix==null)
+    $suffix="?{$modulekit['version']}";
 
   if(!$include_index)
     $include_index="js";
@@ -93,8 +96,11 @@ function modulekit_include_js($include_index="js", $suffix="") {
   return $ret;
 }
 
-function modulekit_include_css($include_index="css", $suffix="") {
+function modulekit_include_css($include_index="css", $suffix=null) {
   $ret="";
+
+  if($suffix==null)
+    $suffix="?{$modulekit['version']}";
 
   if(!$include_index)
     $include_index="css";

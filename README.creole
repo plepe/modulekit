@@ -100,21 +100,24 @@ Otherwise false.
 
 Available: PHP/JS
 
-=== modulekit_include_js($include_index="js", $suffix="") ===
+=== modulekit_include_js($include_index="js", $suffix=null) ===
 Returns a string with <script>-tags with all files listed in the
 $include-arrays of all to-be-loaded modules with the $include_index-index. If
 $include_index is missing or null, "js" will be used. $suffix will be appended
-to the src-property, e.g. to force reloading after a software update.
+to the src-property, e.g. to force reloading after a software update. If
+$suffix is null, it will be created from modulekit['version'].
 
 Example: print modulekit_include_js(null, "?1f725ab");
 
 Available: PHP
 
-=== modulekit_include_css($include_index="css", $suffix="") ===
+=== modulekit_include_css($include_index="css", $suffix=null) ===
 Returns a string with <link rel='stylesheet'>-tags with all files listed in the
 $include-arrays of all to-be-loaded modules with the $include_index-index. If
 $include_index is missing or null, "js" will be used. $suffix will be appended
-to the href-property, e.g. to force reloading after a software update.
+to the href-property, e.g. to force reloading after a software update. If
+$suffix is null, it will be created from modulekit['version'].
+
 
 Example: print modulekit_include_css(null, "?1f725ab");
 
