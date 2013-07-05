@@ -73,13 +73,21 @@ function modulekit_process_inc_files($basepath, $include) {
 }
 
 function modulekit_include_js($include_index="js", $suffix="") {
+  global $modulekit;
   $ret="";
 
   if(!$include_index)
     $include_index="js";
 
-  foreach(modulekit_get_includes("js") as $file) {
-    $ret.="<script type='text/javascript' src=\"{$file}{$suffix}\"></script>\n";
+  if(  isset($modulekit['compiled'])
+     &&isset($modulekit['compiled'][$include_index])) {
+    $ret.="<script type='text/javascript' src=\".modulekit-cache/{$modulekit['compiled'][$include_index]}{$suffix}\"></script>\n";
+
+  }
+  else {
+    foreach(modulekit_get_includes("js") as $file) {
+      $ret.="<script type='text/javascript' src=\"{$file}{$suffix}\"></script>\n";
+    }
   }
 
   return $ret;
@@ -271,6 +279,16 @@ function modulekit_build_cache() {
 
   if(!is_writeable(".modulekit-cache/"))
     return false;
+
+  // Concatenate all Javascript files into one
+  @unlink(".modulekit-cache/compiled.js");
+  foreach(modulekit_get_includes("js") as $file) {
+    file_put_contents(".modulekit-cache/compiled.js",
+      file_get_contents($file),
+      FILE_APPEND
+    );
+  }
+  $modulekit['compiled']['js']="compiled.js";
 
   # Write variable to globals
   file_put_contents(".modulekit-cache/globals", serialize($modulekit));
