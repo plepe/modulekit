@@ -7,11 +7,8 @@
 
 # First clean old cache
 @mkdir(".modulekit-cache");
-unlink(".modulekit-cache/globals");
+@unlink(".modulekit-cache/globals");
 
 # Call the loader, which sets a couple of globals; don't load files
 $modulekit_no_include=true;
 include "loader.php";
-
-# Write variable to globals
-file_put_contents(".modulekit-cache/globals", serialize($modulekit));

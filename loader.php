@@ -266,6 +266,18 @@ function modulekit_loaded($module) {
   return $modulekit['modules'][$module];
 }
 
+function modulekit_build_cache() {
+  global $modulekit;
+
+  if(!is_writeable(".modulekit-cache/"))
+    return false;
+
+  # Write variable to globals
+  file_put_contents(".modulekit-cache/globals", serialize($modulekit));
+
+  return true;
+}
+
 # No additional modules? Set to empty array
 if(!isset($modulekit_load))
   $modulekit_load=array();
@@ -273,12 +285,15 @@ if(!isset($modulekit_load))
 # If cache file is found then read configuration from there
 if(file_exists(".modulekit-cache/globals")) {
   $modulekit=unserialize(file_get_contents(".modulekit-cache/globals"));
+  $modulekit_is_cached=true;
 
   modulekit_debug("Loading configuration from cache", 1);
 
   # Check if list of modules-to-load has changed
-  if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
+  if(sizeof(array_diff($modulekit_load, $modulekit['load']))) {
     unset($modulekit);
+    $modulekit_is_cached=false;
+  }
 }
 
 # No? Re-Build configuration
@@ -294,6 +309,8 @@ if(!isset($modulekit)) {
   modulekit_debug("Loading configuration from modules", 1);
 
   modulekit_load($modulekit_load);
+
+  $modulekit_is_cached=modulekit_build_cache();
 }
 
 # Include all include files
