@@ -88,7 +88,7 @@ function modulekit_include_js($include_index="js", $suffix=null) {
 
   }
   else {
-    foreach(modulekit_get_includes("js") as $file) {
+    foreach(modulekit_get_includes($include_index) as $file) {
       $ret.="<script type='text/javascript' src=\"{$file}{$suffix}\"></script>\n";
     }
   }
@@ -112,7 +112,7 @@ function modulekit_include_css($include_index="css", $suffix=null) {
 
   }
   else {
-    foreach(modulekit_get_includes("css") as $file) {
+    foreach(modulekit_get_includes($include_index) as $file) {
       $ret.="<link rel='stylesheet' type='text/css' href=\"{$file}{$suffix}\">\n";
     }
   }
