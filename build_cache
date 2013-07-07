@@ -7,8 +7,12 @@
 
 # First clean old cache
 @mkdir(".modulekit-cache");
-@unlink(".modulekit-cache/globals");
 
 # Call the loader, which sets a couple of globals; don't load files
 $modulekit_no_include=true;
+$modulekit_nocache=true;
 include "loader.php";
+
+modulekit_clear_cache();
+
+modulekit_build_cache();

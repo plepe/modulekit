@@ -391,6 +391,18 @@ function modulekit_cache_invalid() {
   return false;
 }
 
+function modulekit_clear_cache() {
+  global $modulekit_cache_dir;
+
+  # Empty cache directory
+  $d=opendir($modulekit_cache_dir);
+  while($f=readdir($d)) {
+    if(substr($f, 0, 1)!=".")
+      unlink("{$modulekit_cache_dir}/$f");
+  }
+  closedir($d);
+}
+
 # No additional modules? Set to empty array
 if(!isset($modulekit_load))
   $modulekit_load=array();
@@ -409,6 +421,8 @@ if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
   if(modulekit_cache_invalid()) {
     unset($modulekit);
     $modulekit_is_cached=false;
+
+    modulekit_clear_cache();
   }
 }
 
