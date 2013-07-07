@@ -295,6 +295,16 @@ function modulekit_pack_include_files($type, $mode=null) {
   // Concatenate all Javascript files into one
   foreach(modulekit_get_includes($type) as $file) {
     // beginning of file
+    switch($mode) {
+      case "php":
+        fwrite($f, "<"."?php /* FILE {$file} */ ?".">\n");
+	break;
+      case "js":
+      case "css":
+        fwrite($f, "/* FILE {$file} */\n");
+	break;
+      default:
+    }
 
     // content of file
     fwrite($f, $content=file_get_contents($file));
