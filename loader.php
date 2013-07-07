@@ -7,6 +7,7 @@ if(!isset($modulekit_default_includes))
       'js'=>array("inc/*.js"),
       'css'=>array("inc/*.css"),
     );
+$modulekit_cache_dir=".modulekit-cache/";
 
 function modulekit_debug($text, $level) {
   global $modulekit_debug;
@@ -74,6 +75,7 @@ function modulekit_process_inc_files($basepath, $include) {
 
 function modulekit_include_js($include_index="js", $suffix=null) {
   global $modulekit;
+  global $modulekit_cache_dir;
   $ret="";
 
   if($suffix==null)
@@ -84,7 +86,7 @@ function modulekit_include_js($include_index="js", $suffix=null) {
 
   if(  isset($modulekit['compiled'])
      &&isset($modulekit['compiled'][$include_index])) {
-    $ret.="<script type='text/javascript' src=\".modulekit-cache/{$modulekit['compiled'][$include_index]}{$suffix}\"></script>\n";
+    $ret.="<script type='text/javascript' src=\"{$modulekit_cache_dir}{$modulekit['compiled'][$include_index]}{$suffix}\"></script>\n";
 
   }
   else {
@@ -98,6 +100,7 @@ function modulekit_include_js($include_index="js", $suffix=null) {
 
 function modulekit_include_css($include_index="css", $suffix=null) {
   global $modulekit;
+  global $modulekit_cache_dir;
   $ret="";
 
   if($suffix==null)
@@ -108,7 +111,7 @@ function modulekit_include_css($include_index="css", $suffix=null) {
 
   if(  isset($modulekit['compiled'])
      &&isset($modulekit['compiled'][$include_index])) {
-    $ret.="<link rel='stylesheet' type='text/css' href=\".modulekit-cache/{$modulekit['compiled'][$include_index]}{$suffix}\">\n";
+    $ret.="<link rel='stylesheet' type='text/css' href=\"{$modulekit_cache_dir}{$modulekit['compiled'][$include_index]}{$suffix}\">\n";
 
   }
   else {
@@ -290,14 +293,15 @@ function modulekit_loaded($module) {
 
 function modulekit_pack_include_files($type, $mode=null) {
   global $modulekit;
+  global $modulekit_cache_dir;
 
   if(!$mode)
     $mode=$type;
 
   // Open cache file
   $filename="compiled_{$type}.{$mode}";
-  @unlink(".modulekit-cache/{$filename}");
-  $f=fopen(".modulekit-cache/{$filename}", "w");
+  @unlink("{$modulekit_cache_dir}{$filename}");
+  $f=fopen("{$modulekit_cache_dir}{$filename}", "w");
 
   // Concatenate all Javascript files into one
   foreach(modulekit_get_includes($type) as $file) {
@@ -339,8 +343,9 @@ function modulekit_pack_include_files($type, $mode=null) {
 
 function modulekit_build_cache() {
   global $modulekit;
+  global $modulekit_cache_dir;
 
-  if(!is_writeable(".modulekit-cache/"))
+  if(!is_writeable("{$modulekit_cache_dir}"))
     return false;
 
   // Concatenate files into one
@@ -349,7 +354,7 @@ function modulekit_build_cache() {
   modulekit_pack_include_files("css");
 
   # Write variable to globals
-  file_put_contents(".modulekit-cache/globals", serialize($modulekit));
+  file_put_contents("{$modulekit_cache_dir}globals", serialize($modulekit));
 
   return true;
 }
@@ -394,8 +399,8 @@ if(!isset($modulekit_nocache))
   $modulekit_nocache=false;
 
 # If cache file is found then read configuration from there
-if((!$modulekit_nocache)&&(file_exists(".modulekit-cache/globals"))) {
-  $modulekit=unserialize(file_get_contents(".modulekit-cache/globals"));
+if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
+  $modulekit=unserialize(file_get_contents("{$modulekit_cache_dir}globals"));
   $modulekit_is_cached=true;
 
   modulekit_debug("Loading configuration from cache", 1);
@@ -433,7 +438,7 @@ if((!isset($modulekit_no_include))||(!$modulekit_no_include)) {
 
   if(  isset($modulekit['compiled'])
      &&isset($modulekit['compiled'][$modulekit_include_php])) {
-    include_once(".modulekit-cache/{$modulekit['compiled'][$modulekit_include_php]}");
+    include_once("{$modulekit_cache_dir}{$modulekit['compiled'][$modulekit_include_php]}");
   }
   else {
     foreach(modulekit_get_includes($modulekit_include_php) as $file) {
