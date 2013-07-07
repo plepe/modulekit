@@ -106,8 +106,15 @@ function modulekit_include_css($include_index="css", $suffix=null) {
   if(!$include_index)
     $include_index="css";
 
-  foreach(modulekit_get_includes("css") as $file) {
-    $ret.="<link rel='stylesheet' type='text/css' href=\"{$file}{$suffix}\">\n";
+  if(  isset($modulekit['compiled'])
+     &&isset($modulekit['compiled'][$include_index])) {
+    $ret.="<link rel='stylesheet' type='text/css' href=\".modulekit-cache/{$modulekit['compiled'][$include_index]}{$suffix}\">\n";
+
+  }
+  else {
+    foreach(modulekit_get_includes("css") as $file) {
+      $ret.="<link rel='stylesheet' type='text/css' href=\"{$file}{$suffix}\">\n";
+    }
   }
 
   return $ret;
@@ -339,6 +346,7 @@ function modulekit_build_cache() {
   // Concatenate files into one
   modulekit_pack_include_files("js");
   modulekit_pack_include_files("php");
+  modulekit_pack_include_files("css");
 
   # Write variable to globals
   file_put_contents(".modulekit-cache/globals", serialize($modulekit));
