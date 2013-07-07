@@ -287,18 +287,17 @@ function modulekit_pack_include_files($type, $mode=null) {
   if(!$mode)
     $mode=$type;
 
+  // Open cache file
   $filename="compiled_{$type}.{$mode}";
+  @unlink(".modulekit-cache/{$filename}");
+  $f=fopen(".modulekit-cache/{$filename}", "w");
 
   // Concatenate all Javascript files into one
-  @unlink(".modulekit-cache/{$filename}");
   foreach(modulekit_get_includes($type) as $file) {
     // beginning of file
 
     // content of file
-    file_put_contents(".modulekit-cache/{$filename}",
-      $content=file_get_contents($file),
-      FILE_APPEND
-    );
+    fwrite($f, $content=file_get_contents($file));
 
     // end of file
     switch($mode) {
@@ -308,12 +307,14 @@ function modulekit_pack_include_files($type, $mode=null) {
 	$last_end_tag=strrpos($content, "?".">");
 	if(($last_begin_tag!==false)&&
 	  (($last_end_tag===false)||($last_end_tag<$last_begin_tag)))
-	  file_put_contents(".modulekit-cache/{$filename}", "?".">\n",
-	    FILE_APPEND);
+	  fwrite($f, "?".">\n");
         break;
       default:
     }
   }
+
+  // Done writing file
+  fclose($f);
 
   // register file
   $modulekit['compiled'][$type]=$filename;
