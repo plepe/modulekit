@@ -281,39 +281,53 @@ function modulekit_loaded($module) {
   return $modulekit['modules'][$module];
 }
 
+function modulekit_pack_include_files($type, $mode=null) {
+  global $modulekit;
+
+  if(!$mode)
+    $mode=$type;
+
+  $filename="compiled_{$type}.{$mode}";
+
+  // Concatenate all Javascript files into one
+  @unlink(".modulekit-cache/{$filename}");
+  foreach(modulekit_get_includes($type) as $file) {
+    // beginning of file
+
+    // content of file
+    file_put_contents(".modulekit-cache/{$filename}",
+      $content=file_get_contents($file),
+      FILE_APPEND
+    );
+
+    // end of file
+    switch($mode) {
+      case "php":
+	// make sure every file ends with a php closing tag
+	$last_begin_tag=strrpos($content, "<"."?");
+	$last_end_tag=strrpos($content, "?".">");
+	if(($last_begin_tag!==false)&&
+	  (($last_end_tag===false)||($last_end_tag<$last_begin_tag)))
+	  file_put_contents(".modulekit-cache/{$filename}", "?".">\n",
+	    FILE_APPEND);
+        break;
+      default:
+    }
+  }
+
+  // register file
+  $modulekit['compiled'][$type]=$filename;
+}
+
 function modulekit_build_cache() {
   global $modulekit;
 
   if(!is_writeable(".modulekit-cache/"))
     return false;
 
-  // Concatenate all Javascript files into one
-  @unlink(".modulekit-cache/compiled.js");
-  foreach(modulekit_get_includes("js") as $file) {
-    file_put_contents(".modulekit-cache/compiled.js",
-      file_get_contents($file),
-      FILE_APPEND
-    );
-  }
-  $modulekit['compiled']['js']="compiled.js";
-
-  // Concatenate all PHP files into one
-  @unlink(".modulekit-cache/compiled.php");
-  foreach(modulekit_get_includes("php") as $file) {
-    file_put_contents(".modulekit-cache/compiled.php",
-      $content=file_get_contents($file),
-      FILE_APPEND
-    );
-
-    // make sure every file ends with a php closing tag
-    $last_begin_tag=strrpos($content, "<"."?");
-    $last_end_tag=strrpos($content, "?".">");
-    if(($last_begin_tag!==false)&&
-      (($last_end_tag===false)||($last_end_tag<$last_begin_tag)))
-      file_put_contents(".modulekit-cache/compiled.php", "?".">\n",
-	FILE_APPEND);
-  }
-  $modulekit['compiled']['php']="compiled.php";
+  // Concatenate files into one
+  modulekit_pack_include_files("js");
+  modulekit_pack_include_files("php");
 
   # Write variable to globals
   file_put_contents(".modulekit-cache/globals", serialize($modulekit));
