@@ -486,7 +486,7 @@ function modulekit_clear_cache() {
   $d=opendir($modulekit_cache_dir);
   while($f=readdir($d)) {
     if(substr($f, 0, 1)!=".")
-      unlink("{$modulekit_cache_dir}/$f");
+      @unlink("{$modulekit_cache_dir}/$f");
   }
   closedir($d);
 }
