@@ -359,6 +359,15 @@ function modulekit_build_cache() {
   return true;
 }
 
+function modulekit_get_root_modulekit_version() {
+  include "modulekit.php";
+
+  if(isset($version))
+    return $version;
+
+  return "";
+}
+
 // You may define a $version in conf.php, e.g. "2.0.1"
 // If the current program is a git repository, the short SHA-1 of the current
 // HEAD will be appended as build metadata, e.g. "2.0.1+git.7bd9274"
@@ -368,6 +377,9 @@ function modulekit_version() {
 
   if(isset($version)) {
     $modulekit_version.=$version;
+  }
+  else {
+    $modulekit_version.=modulekit_get_root_modulekit_version();
   }
 
   $git_version=shell_exec('if [ "`which git`" != "" ] ; then echo `git rev-parse --short HEAD` ; fi 2> /dev/null');
