@@ -391,30 +391,37 @@ function modulekit_build_cache() {
 
 function modulekit_get_root_modulekit_version() {
   include "modulekit.php";
+  $ret="";
 
-  if(isset($version))
-    return $version;
+  $version_build=modulekit_version_build("", ".");
 
-  return "";
+  if(isset($version)) {
+    $ret.=$version;
+  }
+  else {
+    global $version;
+
+    if(isset($version))
+      $ret.=$version;
+  }
+
+  if($version_build)
+    $ret.="+{$version_build}";
+
+  return $ret;
 }
 
 // You may define a $version in conf.php, e.g. "2.0.1"
 // If the current program is a git repository, the short SHA-1 of the current
 // HEAD will be appended as build metadata, e.g. "2.0.1+git.7bd9274"
 function modulekit_version() {
-  global $version;
   $modulekit_version="";
+  $data=modulekit_loaded("");
 
-  if(isset($version)) {
-    $modulekit_version.=$version;
-  }
-  else {
-    $modulekit_version.=modulekit_get_root_modulekit_version();
-  }
+  $modulekit_version.=$data['version'];
 
-  $git_version=modulekit_version_build();
-  if($git_version)
-    $modulekit_version.="+git.{$git_version}";
+  if($data['version_build'])
+    $modulekit_version.="+{$data['version_build']}";
 
   return $modulekit_version;
 }
@@ -426,7 +433,7 @@ function modulekit_cache_invalid() {
   if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
     return true;
 
-  if(modulekit_version()!=$modulekit['version'])
+  if(modulekit_get_root_modulekit_version()!=$modulekit['version'])
     return true;
 
   return false;
@@ -470,7 +477,6 @@ if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
 # No? Re-Build configuration
 if(!isset($modulekit)) {
   $modulekit=array(
-    'version'	=>modulekit_version(),
     'modules'	=>array(),
     'order'	=>array(),
     'aliases'	=>array(),
@@ -481,6 +487,8 @@ if(!isset($modulekit)) {
   modulekit_debug("Loading configuration from modules", 1);
 
   modulekit_load($modulekit_load);
+
+  $modulekit['version']=modulekit_version();
 
   if(!$modulekit_nocache)
     $modulekit_is_cached=modulekit_build_cache();
