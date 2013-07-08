@@ -366,7 +366,7 @@ function modulekit_version() {
   global $version;
   $modulekit_version="";
 
-  if(!isset($version)) {
+  if(isset($version)) {
     $modulekit_version.=$version;
   }
 
