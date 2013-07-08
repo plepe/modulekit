@@ -123,6 +123,15 @@ function modulekit_include_css($include_index="css", $suffix=null) {
   return $ret;
 }
 
+function modulekit_version_build($module, $path) {
+  if(file_exists("{$path}/.git")) {
+    $version_build=shell_exec("cd \"{$path}\"; if [ \"`which git`\" != \"\" ] ; then echo `git rev-parse --short HEAD` ; fi 2> /dev/null");
+    return "git.".trim($version_build);
+  }
+
+  return null;
+}
+
 function modulekit_load_module($module, $path, $parent=array()) {
   global $modulekit;
 
@@ -149,6 +158,27 @@ function modulekit_load_module($module, $path, $parent=array()) {
   }
   $data['id']=$module;
   $modulekit['aliases'][$module]=$module;
+
+  $data['version_build']=modulekit_version_build($module, $path);
+  if($data['version_build']===null)
+    $data['version_build']=$parent['version_build'];
+
+  if(!isset($data['version'])) {
+    if(isset($parent['version'])) {
+      if($data['version_build']==$parent['version_build'])
+	$data['version']=$parent['version'];
+      else
+	$data['version']="";
+    }
+    else {
+      global $version;
+
+      if(isset($version))
+	$data['version']=$version;
+      else
+	$data['version']="";
+    }
+  }
 
   if(isset($depend))
     $data['depend']=$depend;
@@ -382,8 +412,7 @@ function modulekit_version() {
     $modulekit_version.=modulekit_get_root_modulekit_version();
   }
 
-  $git_version=shell_exec('if [ "`which git`" != "" ] ; then echo `git rev-parse --short HEAD` ; fi 2> /dev/null');
-  $git_version=trim($git_version);
+  $git_version=modulekit_version_build();
   if($git_version)
     $modulekit_version.="+git.{$git_version}";
 

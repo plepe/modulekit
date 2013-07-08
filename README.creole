@@ -33,6 +33,10 @@ $name="Name of this project/module";
 // an ID to identify this module
 $id="id";
 
+// a version (see http://semver.org how to define versions)
+// it will be inherited to submodules if they are in the same repository
+$version="1.0.0";
+
 // these modules should be loaded first
 $depend=array("form", "lang");
 
