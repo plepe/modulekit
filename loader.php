@@ -232,9 +232,20 @@ function modulekit_resolve_depend($module, &$done) {
   $data=$modulekit['modules'][$modulekit['aliases'][$module]];
 
   if(isset($data['depend'])&&is_array($data['depend']))
-    foreach($data['depend'] as $m)
+    foreach($data['depend'] as $m=>$version_constraint) {
+      if(is_integer($m)) {
+	$m=$version_constraint;
+	$version_constraint=null;
+      }
+
       if(!in_array($m, $done))
 	modulekit_resolve_depend($m, $done);
+
+      $check_version=modulekit_check_version($modulekit['modules'][$modulekit['aliases'][$m]]['version'], $version_constraint);
+      if($check_version!==true) {
+	throw new Exception("Can't resolve dependencies: {$check_version} of module '$m'");
+      }
+    }
 
   if(!in_array($data['id'], $modulekit['order']))
     $modulekit['order'][]=$data['id'];
@@ -424,6 +435,35 @@ function modulekit_version() {
     $modulekit_version.="+{$data['version_build']}";
 
   return $modulekit_version;
+}
+
+function modulekit_check_version($version, $constraint) {
+  if(!$constraint)
+    return true;
+
+  if(!$version)
+    return "no version defined";
+
+  if(preg_match("/^([0-9\.]+)[-+]/", $version, $m))
+    $version=$m[1];
+
+  $version_parts=explode(".", $version);
+  $constraint_parts=explode(".", $constraint);
+
+  $is_higher="requires version {$constraint}";
+
+  foreach($constraint_parts as $i=>$constraint_part) {
+    if(sizeof($version_parts)<=$i) {
+      return $is_higher;
+    }
+
+    if((int)$version_parts[$i]>(int)$constraint_part)
+      $is_higher=true;
+    if((int)$version_parts[$i]<(int)$constraint_part)
+      return "requires version {$constraint}";
+  }
+
+  return true;
 }
 
 function modulekit_cache_invalid() {
