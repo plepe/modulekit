@@ -123,7 +123,7 @@ function modulekit_include_css($include_index="css", $suffix=null) {
   return $ret;
 }
 
-function modulekit_load_module($module, $path, $default_include=null) {
+function modulekit_load_module($module, $path, $parent=array()) {
   global $modulekit;
 
   modulekit_debug("Loading configuration for module '$module'", 2);
@@ -135,7 +135,7 @@ function modulekit_load_module($module, $path, $default_include=null) {
   $data=get_defined_vars();
 
   // remove all previously defined variables from $data, save "path"
-  foreach(array("modulekit", "data", "module", "default_include") as $k)
+  foreach(array("modulekit", "data", "module", "parent") as $k)
     unset($data[$k]);
 
   $modulekit['aliases'][$module]=$module;
@@ -158,8 +158,8 @@ function modulekit_load_module($module, $path, $default_include=null) {
     $data['modules_path']=$modules_path;
 
   if(!isset($include)) {
-    if($default_include!=null)
-      $include=$default_include;
+    if($parent['default_include']!=null)
+      $include=$parent['default_include'];
     else {
       global $modulekit_default_includes;
       $include=$modulekit_default_includes;
@@ -185,7 +185,7 @@ function modulekit_load_module($module, $path, $default_include=null) {
 	continue;
 
       if(is_dir("{$path}/{$data['modules_path']}/{$module}"))
-	modulekit_load_module($module, "{$path}/{$data['modules_path']}/$module", $default_include);
+	modulekit_load_module($module, "{$path}/{$data['modules_path']}/$module", $data);
     }
   }
 
