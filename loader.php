@@ -266,11 +266,11 @@ function modulekit_file($module, $path, $absolute_path=false) {
   global $modulekit;
   $prefix="";
 
-  if($absolute_path) {
+  if($absolute_path===true) {
     global $modulekit_root;
     $prefix=$modulekit_root;
   }
-  else {
+  elseif($absolute_path===false) {
     global $modulekit_root_relative;
     $prefix=$modulekit_root_relative;
   }
