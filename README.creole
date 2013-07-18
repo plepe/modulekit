@@ -93,7 +93,12 @@ If a module depends on more submodules, you don't add them to the submodule's mo
 
 == Functions defined by 'modulekit' ==
 === modulekit_file($module, $path, [$absolute_path]) ===
-Returns a relative (or absolute, if the third parameter is true) path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/**id**/-path).
+Returns a relative or absolute path to a file specified by $path. $module is either the id of the module itself or the id used by the project (the modules/**id**/-path). No tests whether the file exist or not will be conducted.
+
+Parameter $absolute_path:
+* true: absolute path in filesystem (PHP) resp. from Domain (JS); e.g. "/path/to/repo/img/test.png" resp. "/~user/repo/img/test.png"
+* false (default): relative path from calling script; e.g. "../img/test.png"
+* null: relative path from root of repository; e.g. "img/test.png"
 
 * This function is also available in JavaScript, after calling "print modulekit_to_javascript()" 
 
