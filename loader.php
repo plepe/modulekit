@@ -23,15 +23,17 @@ function modulekit_debug($text, $level) {
 }
 
 function modulekit_read_inc_files($basepath, $path="") {
+  global $modulekit_root;
+
   $list=array();
 
-  if(!is_dir("{$basepath}/{$path}"))
+  if(!is_dir("{$modulekit_root}{$basepath}/{$path}"))
     return array();
 
-  $d=opendir("{$basepath}/{$path}");
+  $d=opendir("{$modulekit_root}{$basepath}/{$path}");
   while($f=readdir($d)) {
     if(substr($f, 0, 1)==".");
-    elseif(is_dir("{$basepath}/{$path}{$f}")) {
+    elseif(is_dir("{$modulekit_root}{$basepath}/{$path}{$f}")) {
       $list=array_merge($list, modulekit_read_inc_files($basepath, "{$path}{$f}/"));
     }
     else {
@@ -75,6 +77,7 @@ function modulekit_process_inc_files($basepath, $include) {
 function modulekit_include_js($include_index="js", $suffix=null) {
   global $modulekit;
   global $modulekit_cache_dir;
+  global $modulekit_root_relative;
   $ret="";
 
   if($suffix==null)
@@ -100,6 +103,7 @@ function modulekit_include_js($include_index="js", $suffix=null) {
 function modulekit_include_css($include_index="css", $suffix=null) {
   global $modulekit;
   global $modulekit_cache_dir;
+  global $modulekit_root_relative;
   $ret="";
 
   if($suffix==null)
@@ -123,8 +127,10 @@ function modulekit_include_css($include_index="css", $suffix=null) {
 }
 
 function modulekit_version_build($module, $path) {
-  if(file_exists("{$path}/.git")) {
-    $version_build=shell_exec("cd \"{$path}\"; if [ \"`which git`\" != \"\" ] ; then echo `git rev-parse --short HEAD` ; fi 2> /dev/null");
+  global $modulekit_root;
+
+  if(file_exists("{$modulekit_root}{$path}/.git")) {
+    $version_build=shell_exec("cd \"{$modulekit_root}{$path}\"; if [ \"`which git`\" != \"\" ] ; then echo `git rev-parse --short HEAD` ; fi 2> /dev/null");
     return "git.".trim($version_build);
   }
 
@@ -133,17 +139,18 @@ function modulekit_version_build($module, $path) {
 
 function modulekit_load_module($module, $path, $parent=array()) {
   global $modulekit;
+  global $modulekit_root;
 
   modulekit_debug("Loading configuration for module '$module'", 2);
 
-  if(file_exists("$path/modulekit.php"))
-    require "$path/modulekit.php";
+  if(file_exists("{$modulekit_root}{$path}/modulekit.php"))
+    require "{$modulekit_root}{$path}/modulekit.php";
 
   // use all (newly) defined variables from modulekit.php
   $data=get_defined_vars();
 
   // remove all previously defined variables from $data, save "path"
-  foreach(array("modulekit", "data", "module", "parent") as $k)
+  foreach(array("modulekit", "modulekit_root", "data", "module", "parent") as $k)
     unset($data[$k]);
 
   $modulekit['aliases'][$module]=$module;
@@ -207,13 +214,13 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   $modulekit['modules'][$module]=$data;
 
-  if(is_dir("{$path}/{$data['modules_path']}")) {
-    $modules_dir=opendir("{$path}/{$data['modules_path']}/");
+  if(is_dir("{$modulekit_root}{$path}/{$data['modules_path']}")) {
+    $modules_dir=opendir("{$modulekit_root}{$path}/{$data['modules_path']}/");
     while($module=readdir($modules_dir)) {
       if(substr($module, 0, 1)==".")
 	continue;
 
-      if(is_dir("{$path}/{$data['modules_path']}/{$module}"))
+      if(is_dir("{$modulekit_root}{$path}/{$data['modules_path']}/{$module}"))
 	modulekit_load_module($module, "{$path}/{$data['modules_path']}/$module", $data);
     }
   }
@@ -259,8 +266,14 @@ function modulekit_file($module, $path, $absolute_path=false) {
   global $modulekit;
   $prefix="";
 
-  if($absolute_path)
-    $prefix="{$modulekit['root_path']}/";
+  if($absolute_path) {
+    global $modulekit_root;
+    $prefix=$modulekit_root;
+  }
+  else {
+    global $modulekit_root_relative;
+    $prefix=$modulekit_root_relative;
+  }
 
   return "{$prefix}{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}/{$path}";
 }
@@ -400,7 +413,9 @@ function modulekit_build_cache() {
 }
 
 function modulekit_get_root_modulekit_version() {
-  include "modulekit.php";
+  global $modulekit_root;
+
+  include "{$modulekit_root}modulekit.php";
   $ret="";
 
   $version_build=modulekit_version_build("", ".");
