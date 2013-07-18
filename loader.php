@@ -7,7 +7,6 @@ if(!isset($modulekit_default_includes))
       'js'=>array("inc/*.js"),
       'css'=>array("inc/*.css"),
     );
-$modulekit_cache_dir=".modulekit-cache/";
 
 function modulekit_debug($text, $level) {
   global $modulekit_debug;
@@ -506,6 +505,13 @@ if(substr(getcwd(), 0, strlen($modulekit_root))==$modulekit_root) {
   $rel=explode("/", substr(getcwd(), strlen($modulekit_root)));
   $modulekit_root_relative=str_repeat("../", sizeof($rel));
 }
+
+# Check location of (possible) modulekit cache directory
+if(isset($modulekit_cache_dir)) {
+  $modulekit_cache_dir="{$modulekit_root_relative}{$modulekit_cache_dir}";
+}
+else
+  $modulekit_cache_dir="{$modulekit_root_relative}.modulekit-cache/";
 
 # If cache file is found then read configuration from there
 if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
