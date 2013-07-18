@@ -498,8 +498,14 @@ if(!isset($modulekit_load))
 if(!isset($modulekit_nocache))
   $modulekit_nocache=false;
 
-# Get root of repository
+# Get absolute and relative path to root of repository
 $modulekit_root=dirname(dirname(__FILE__))."/";
+$modulekit_root_relative="";
+
+if(substr(getcwd(), 0, strlen($modulekit_root))==$modulekit_root) {
+  $rel=explode("/", substr(getcwd(), strlen($modulekit_root)));
+  $modulekit_root_relative=str_repeat("../", sizeof($rel));
+}
 
 # If cache file is found then read configuration from there
 if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
