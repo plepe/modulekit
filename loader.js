@@ -13,9 +13,23 @@ function modulekit_loaded(module) {
   return false;
 }
 
-function modulekit_file(module, path) {
+function modulekit_file(module, path, absolute_path) {
+  var prefix="";
+
   if(!path)
     path="";
+
+  if(typeof absolute_path=="undefined")
+    absolute_path=false;
+
+  if(absolute_path===true) {
+    var rel=modulekit_root_relative.split("../");
+    prefix=location.pathname.split("/");
+    prefix=prefix.slice(0, prefix.length-rel.length).join("/")+"/";
+  }
+  else if(absolute_path===false) {
+    prefix=modulekit_root_relative;
+  }
 
   if((!modulekit)||
      (!modulekit.modules))
@@ -29,7 +43,7 @@ function modulekit_file(module, path) {
      (!modulekit.modules[module].path))
     return;
 
-  return modulekit.modules[module].path+"/"+path;
+  return prefix+modulekit.modules[module].path+"/"+path;
 }
 
 function modulekit_get_includes(type) {

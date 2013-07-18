@@ -280,10 +280,12 @@ function modulekit_file($module, $path, $absolute_path=false) {
 
 function modulekit_to_javascript() {
   global $modulekit;
+  global $modulekit_root_relative;
 
   // TODO: remove maybe unwanted information?
   $ret ="<script type='text/javascript'>\n";
   $ret.="var modulekit=".json_encode($modulekit).";\n";
+  $ret.="var modulekit_root_relative=".json_encode($modulekit_root_relative).";\n";
   $ret.="\n";
   $ret.=file_get_contents(dirname(__FILE__)."/loader.js");
   $ret.="</script>\n";
