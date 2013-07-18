@@ -498,6 +498,9 @@ if(!isset($modulekit_load))
 if(!isset($modulekit_nocache))
   $modulekit_nocache=false;
 
+# Get root of repository
+$modulekit_root=dirname(dirname(__FILE__))."/";
+
 # If cache file is found then read configuration from there
 if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
   $modulekit=unserialize(file_get_contents("{$modulekit_cache_dir}globals"));
@@ -521,7 +524,7 @@ if(!isset($modulekit)) {
     'order'	=>array(),
     'aliases'	=>array(),
     'load'	=>$modulekit_load,
-    'root_path'	=>dirname(dirname(__FILE__)),
+    'root_path'	=>$modulekit_root,
   );
 
   modulekit_debug("Loading configuration from modules", 1);
