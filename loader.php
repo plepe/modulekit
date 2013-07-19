@@ -137,6 +137,22 @@ function modulekit_version_build($module, $path) {
   return null;
 }
 
+function modulekit_module_is_empty($module, $path) {
+  global $modulekit_root;
+
+  $count=0;
+
+  $d=opendir("{$modulekit}{$path}");
+  while($f=readdir($d))
+    if(substr($f, 0, 1)!=".")
+      $count++;
+
+  if($count==0)
+    return true;
+
+  return false;
+}
+
 function modulekit_load_module($module, $path, $parent=array()) {
   global $modulekit;
   global $modulekit_root;
@@ -145,6 +161,10 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   if(file_exists("{$modulekit_root}{$path}modulekit.php"))
     require "{$modulekit_root}{$path}modulekit.php";
+  // ignore empty directories
+  else
+    if(modulekit_module_is_empty($module, $path))
+      return;
 
   // use all (newly) defined variables from modulekit.php
   $data=get_defined_vars();
