@@ -327,6 +327,7 @@ function modulekit_build_include_list($type) {
 
 function modulekit_load($additional) {
   modulekit_load_module("", "");
+  modulekit_load_module("modulekit", "modulekit/");
 
   $resolve_done=array();
   modulekit_resolve_depend("", $resolve_done);
