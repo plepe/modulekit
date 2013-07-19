@@ -142,7 +142,7 @@ function modulekit_module_is_empty($module, $path) {
 
   $count=0;
 
-  $d=opendir("{$modulekit}{$path}");
+  $d=opendir("{$modulekit_root}{$path}");
   while($f=readdir($d))
     if(substr($f, 0, 1)!=".")
       $count++;
