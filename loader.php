@@ -215,13 +215,18 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   if(($data['modules_path']!==null)&&
      is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
-    $modules_dir=opendir("{$modulekit_root}{$path}{$data['modules_path']}/");
+    if($data['modules_path']==".")
+      $modules_dir_path=$path;
+    else
+      $modules_dir_path="{$path}{$data['modules_path']}/";
+    $modules_dir=opendir("{$modulekit_root}{$modules_dir_path}");
+
     while($module=readdir($modules_dir)) {
       if(substr($module, 0, 1)==".")
 	continue;
 
-      if(is_dir("{$modulekit_root}{$path}{$data['modules_path']}/{$module}/"))
-	modulekit_load_module($module, "{$path}{$data['modules_path']}/$module/", $data);
+      if(is_dir("{$modulekit_root}{$modules_dir_path}{$module}/"))
+	modulekit_load_module($module, "{$modules_dir_path}{$module}/", $data);
     }
   }
 
