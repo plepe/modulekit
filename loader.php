@@ -228,6 +228,8 @@ function modulekit_load_module($module, $path, $parent=array()) {
       if(is_dir("{$modulekit_root}{$modules_dir_path}{$module}/"))
 	modulekit_load_module($module, "{$modules_dir_path}{$module}/", $data);
     }
+
+    closedir($modules_dir);
   }
 
   return $data;
