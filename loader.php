@@ -189,9 +189,8 @@ function modulekit_load_module($module, $path, $parent=array()) {
   if(isset($depend))
     $data['depend']=$depend;
 
-  $data['modules_path']="modules";
-  if(isset($modules_path))
-    $data['modules_path']=$modules_path;
+  if(!array_key_exists('modules_path', $data))
+    $data['modules_path']="modules";
 
   if(!isset($include)) {
     if($parent['default_include']!=null)
@@ -214,7 +213,8 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   $modulekit['modules'][$module]=$data;
 
-  if(is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
+  if(($data['modules_path']!==null)&&
+     is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
     $modules_dir=opendir("{$modulekit_root}{$path}{$data['modules_path']}/");
     while($module=readdir($modules_dir)) {
       if(substr($module, 0, 1)==".")
