@@ -43,7 +43,7 @@ function modulekit_file(module, path, absolute_path) {
      (!modulekit.modules[module].path))
     return;
 
-  return prefix+modulekit.modules[module].path+"/"+path;
+  return prefix+modulekit.modules[module].path+path;
 }
 
 function modulekit_get_includes(type) {

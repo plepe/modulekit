@@ -143,8 +143,8 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   modulekit_debug("Loading configuration for module '$module'", 2);
 
-  if(file_exists("{$modulekit_root}{$path}/modulekit.php"))
-    require "{$modulekit_root}{$path}/modulekit.php";
+  if(file_exists("{$modulekit_root}{$path}modulekit.php"))
+    require "{$modulekit_root}{$path}modulekit.php";
 
   // use all (newly) defined variables from modulekit.php
   $data=get_defined_vars();
@@ -214,14 +214,14 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   $modulekit['modules'][$module]=$data;
 
-  if(is_dir("{$modulekit_root}{$path}/{$data['modules_path']}")) {
-    $modules_dir=opendir("{$modulekit_root}{$path}/{$data['modules_path']}/");
+  if(is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
+    $modules_dir=opendir("{$modulekit_root}{$path}{$data['modules_path']}/");
     while($module=readdir($modules_dir)) {
       if(substr($module, 0, 1)==".")
 	continue;
 
-      if(is_dir("{$modulekit_root}{$path}/{$data['modules_path']}/{$module}"))
-	modulekit_load_module($module, "{$path}/{$data['modules_path']}/$module", $data);
+      if(is_dir("{$modulekit_root}{$path}{$data['modules_path']}/{$module}/"))
+	modulekit_load_module($module, "{$path}{$data['modules_path']}/$module/", $data);
     }
   }
 
@@ -275,7 +275,7 @@ function modulekit_file($module, $path, $absolute_path=false) {
     $prefix=$modulekit_root_relative;
   }
 
-  return "{$prefix}{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}/{$path}";
+  return "{$prefix}{$modulekit['modules'][$modulekit['aliases'][$module]]['path']}{$path}";
 }
 
 function modulekit_to_javascript() {
@@ -326,7 +326,7 @@ function modulekit_build_include_list($type) {
 }
 
 function modulekit_load($additional) {
-  modulekit_load_module("", ".");
+  modulekit_load_module("", "");
 
   $resolve_done=array();
   modulekit_resolve_depend("", $resolve_done);
