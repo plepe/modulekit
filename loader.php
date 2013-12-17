@@ -514,7 +514,7 @@ function modulekit_cache_invalid() {
   global $modulekit;
   global $modulekit_load;
 
-  if(sizeof(array_diff($modulekit_load, $modulekit['load'])))
+  if(sizeof(array_diff(array_merge($modulekit_load, $modulekit['config']['load']), $modulekit['load'])))
     return true;
 
   if(modulekit_get_root_modulekit_version()!=$modulekit['version'])
@@ -533,6 +533,31 @@ function modulekit_clear_cache() {
       @unlink("{$modulekit_cache_dir}/$f");
   }
   closedir($d);
+}
+
+function modulekit_load_config() {
+  global $modulekit;
+  $file = dirname(__FILE__)."/config";
+
+  $modulekit['config'] = array();
+  if(file_exists($file)) {
+    $modulekit['config'] = @json_decode(file_get_contents($file), true);
+
+    if(!$modulekit['config'])
+      $modulekit['config'] = array();
+  }
+
+  if(!array_key_exists('load', $modulekit['config']))
+    $modulekit['config']['load'] = array();
+
+  return $modulekit['config'];
+}
+
+function modulekit_save_config() {
+  global $modulekit;
+  $file = dirname(__FILE__)."/config";
+
+  file_put_contents($file, json_encode($modulekit['config']));
 }
 
 # No additional modules? Set to empty array
@@ -565,6 +590,8 @@ if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
 
   modulekit_debug("Loading configuration from cache", 1);
 
+  modulekit_load_config();
+
   # Check if list of modules-to-load has changed
   if(modulekit_cache_invalid()) {
     unset($modulekit);
@@ -576,17 +603,21 @@ if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
 
 # No? Re-Build configuration
 if(!isset($modulekit)) {
+  if(!isset($modulekit['config']))
+    modulekit_load_config();
+
   $modulekit=array(
     'modules'	=>array(),
     'order'	=>array(),
     'aliases'	=>array(),
-    'load'	=>$modulekit_load,
+    'load'	=>array_merge($modulekit_load, $modulekit['config']['load']),
+    'config'    =>$modulekit['config'],
     'root_path'	=>$modulekit_root,
   );
 
   modulekit_debug("Loading configuration from modules", 1);
 
-  modulekit_load($modulekit_load);
+  modulekit_load(array_merge($modulekit_load, $modulekit['config']['load']));
 
   $modulekit['version']=modulekit_version();
 
