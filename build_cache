@@ -5,14 +5,16 @@
 # If there's a conf.php, load it
 @include "conf.php";
 
-# First clean old cache
-@mkdir(".modulekit-cache");
-
 # Call the loader, which sets a couple of globals; don't load files
 $modulekit_no_include=true;
 $modulekit_nocache=true;
 include "loader.php";
 
+# Make sure that cache directory exists
+@mkdir($modulekit_cache_dir);
+
+# First clean old cache
 modulekit_clear_cache();
 
+# Now create cache
 modulekit_build_cache();
