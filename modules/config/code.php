@@ -20,8 +20,18 @@ function modulekit_config_page() {
     $ret .= " />";
     $ret .= "</div>";
 
-    $ret .="<div class='title'>\n";
-    $ret .= " {$id}\n";
+    $ret .= "<div class='title'>\n";
+    $ret .= array_key_exists('name', $config)?$config['name']:$id;
+    $ret .= "</div>\n";
+
+    if(array_key_exists('description', $config)) {
+      $ret .= "<div class='description'>\n";
+      $ret .= $config['description'];
+      $ret .= "</div>\n";
+    }
+
+    $ret .="<div class='status'>\n";
+    $ret .="Status: " . (in_array($id, $modulekit['order'])?"loaded":"not loaded")."\n";
     $ret .="</div>\n";
 
     $ret .= "</div>\n";
