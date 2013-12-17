@@ -13,6 +13,11 @@ include "loader.php";
 # Make sure that cache directory exists
 @mkdir($modulekit_cache_dir);
 
+# Give web server rwx rights on cache directory
+# TODO: make sure setfacl is installed / acls are enabled
+system("setfacl -m user:www-data:rwx '$modulekit_cache_dir'");
+system("setfacl -dm user:www-data:rw '$modulekit_cache_dir'");
+
 # First clean old cache
 modulekit_clear_cache();
 
