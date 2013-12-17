@@ -36,6 +36,9 @@ $id="id";
 // An optional description
 $description="This module does this or that.";
 
+// A module can be in one (string) or more (array) categories (those can be selected for the configure page)
+$category="system";
+
 // a version (see http://semver.org how to define versions)
 // it will be inherited to submodules if they are in the same repository
 $version="1.0.0";

@@ -1,11 +1,22 @@
 <?
-function modulekit_config_page() {
+function modulekit_config_page($options=array()) {
   global $modulekit;
   global $modulekit_load;
   $ret = "";
 
+  if(!array_key_exists('category', $options))
+    $options['category'] = null;
+  if(($options['category'] !== null) && (is_string($options['category'])))
+    $options['category'] = array($options['category']);
+
   $ret .= "<form method='post'>\n";
   foreach($modulekit['modules'] as $id=>$config) {
+    if(($options['category'] !== null) &&
+       ((!array_key_exists('category', $config)) || (
+         !(is_string($config['category']) && (in_array($config['category'], $options['category']))) &&
+         !(is_array($config['category']) && sizeof(array_intersect($config['category'], $options['category']))))))
+      continue;
+
     $ret .= "<div class='modulekit-config'>\n";
 
     $ret .= "<div class='checkbox'>\n";
