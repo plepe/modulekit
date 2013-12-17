@@ -1,0 +1,13 @@
+.modulekit-config {
+  margin-top: 1em;
+  margin-left: 2em;
+  position: relative;
+}
+.modulekit-config .checkbox {
+  position: absolute;
+  top: 0px;
+  left: -2em;
+}
+.modulekit-config .title {
+  font-weight: bold;
+}

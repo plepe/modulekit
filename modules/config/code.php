@@ -6,6 +6,9 @@ function modulekit_config_page() {
 
   $ret .= "<form method='post'>\n";
   foreach($modulekit['modules'] as $id=>$config) {
+    $ret .= "<div class='modulekit-config'>\n";
+
+    $ret .= "<div class='checkbox'>\n";
     $ret .= "<input type='checkbox' name='{$id}'";
 
     if(in_array($id, $modulekit_load))
@@ -14,7 +17,14 @@ function modulekit_config_page() {
     if(in_array($id, $modulekit['load']))
       $ret .= " checked='checked'";
 
-    $ret .= " /> {$id}<br>\n";
+    $ret .= " />";
+    $ret .= "</div>";
+
+    $ret .="<div class='title'>\n";
+    $ret .= " {$id}\n";
+    $ret .="</div>\n";
+
+    $ret .= "</div>\n";
   }
   $ret .= "</form>\n";
 
