@@ -557,7 +557,19 @@ function modulekit_save_config() {
   global $modulekit;
   $file = dirname(__FILE__)."/config";
 
-  file_put_contents($file, json_encode($modulekit['config']));
+  $r = file_put_contents($file, json_encode($modulekit['config']));
+
+  if($r === false)
+    return false;
+
+  return true;
+}
+
+function modulekit_config_writable() {
+  global $modulekit;
+  $file = dirname(__FILE__)."/config";
+
+  return is_writable($file);
 }
 
 # No additional modules? Set to empty array

@@ -7,10 +7,12 @@ function modulekit_config_page($options=array()) {
   if($_REQUEST['modulekit_enabled']) {
     unset($_REQUEST['modulekit_enabled']['__']);
     $modulekit['config']['load'] = array_keys($_REQUEST['modulekit_enabled']);
-    modulekit_save_config();
 
-    return true;
+    return modulekit_save_config();
   }
+
+  if(!modulekit_config_writable())
+    $ret .= "<b>Modulekit Config is not writable!</b><br>\n";
 
   if(!array_key_exists('category', $options))
     $options['category'] = null;
