@@ -49,6 +49,7 @@ function modulekit_files_match($files, $entry) {
   $entry="/^".strtr($entry, array(
     "."=>"\\.",
     "*"=>"[^\\/]*",
+    "+"=>"\\+",
     "/"=>"\\/",
     "?"=>"[^\\/]",
   ))."$/";
