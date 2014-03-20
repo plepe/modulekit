@@ -27,13 +27,13 @@ function modulekit_read_inc_files($basepath, $path="") {
 
   $list=array();
 
-  if(!is_dir("{$modulekit_root}{$basepath}/{$path}"))
+  if(!@is_dir("{$modulekit_root}{$basepath}/{$path}"))
     return array();
 
   $d=opendir("{$modulekit_root}{$basepath}/{$path}");
   while($f=readdir($d)) {
     if(substr($f, 0, 1)==".");
-    elseif(is_dir("{$modulekit_root}{$basepath}/{$path}{$f}")) {
+    elseif(@is_dir("{$modulekit_root}{$basepath}/{$path}{$f}")) {
       $list=array_merge($list, modulekit_read_inc_files($basepath, "{$path}{$f}/"));
     }
     else {
@@ -235,7 +235,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
   $modulekit['modules'][$module]=$data;
 
   if(($data['modules_path']!==null)&&
-     is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
+     @is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
     if($data['modules_path']==".")
       $modules_dir_path=$path;
     else
@@ -246,7 +246,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
       if(substr($module, 0, 1)==".")
 	continue;
 
-      if(is_dir("{$modulekit_root}{$modules_dir_path}{$module}/"))
+      if(@is_dir("{$modulekit_root}{$modules_dir_path}{$module}/"))
 	modulekit_load_module($module, "{$modules_dir_path}{$module}/", $data);
     }
 
