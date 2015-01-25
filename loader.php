@@ -1,5 +1,4 @@
-<?
-unset($modulekit);
+<?php
 if(!isset($modulekit_default_includes))
   $modulekit_default_includes=
     array(

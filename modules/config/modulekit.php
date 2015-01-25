@@ -1,4 +1,4 @@
-<?
+<?php
 $id="modulekit-config";
 
 $include=array(

@@ -1,4 +1,4 @@
-<?
+<?php
 function modulekit_config_page($options=array()) {
   global $modulekit;
   global $modulekit_load;

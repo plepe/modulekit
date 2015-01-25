@@ -1,4 +1,4 @@
-<?
+<?php
 $id="modulekit";
 
 $version="1.1.0";
