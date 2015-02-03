@@ -587,6 +587,16 @@ if(substr(getcwd(), 0, strlen($modulekit_root))==$modulekit_root) {
   $rel=explode("/", substr(getcwd(), strlen($modulekit_root)));
   $modulekit_root_relative=str_repeat("../", sizeof($rel));
 }
+elseif(getcwd()."/"==$modulekit_root) {
+  $modulekit_root_relative="";
+}
+elseif(substr($modulekit_root, 0, strlen(getcwd()))==getcwd()) {
+  $rel=explode("/", substr($modulekit_root, strlen(getcwd())));
+  $modulekit_root_relative=implode("/", array_slice($rel, 1));
+}
+else {
+  $modulekit_root_relative=$modulekit_root;
+}
 
 # Check location of (possible) modulekit cache directory
 if(isset($modulekit_cache_dir)) {
