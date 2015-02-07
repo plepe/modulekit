@@ -213,7 +213,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
     $data['modules_path']="modules";
 
   if(!isset($include)) {
-    if($parent['default_include']!=null)
+    if((array_key_exists('default_include', $parent) && ($parent['default_include']!=null)))
       $include=$parent['default_include'];
     else {
       global $modulekit_default_includes;
