@@ -625,8 +625,7 @@ if((!$modulekit_nocache)&&(file_exists("{$modulekit_cache_dir}globals"))) {
 
 # No? Re-Build configuration
 if(!isset($modulekit)) {
-  if(!isset($modulekit['config']))
-    modulekit_load_config();
+  modulekit_load_config();
 
   $modulekit=array(
     'modules'	=>array(),
@@ -639,7 +638,7 @@ if(!isset($modulekit)) {
 
   modulekit_debug("Loading configuration from modules", 1);
 
-  modulekit_load(array_merge($modulekit_load, $modulekit['config']['load']));
+  modulekit_load($modulekit['load']);
 
   $modulekit['version']=modulekit_version();
 
