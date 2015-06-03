@@ -1,4 +1,8 @@
 <?php
+global $modulekit;
+global $modulekit_root;
+global $modulekit_default_includes;
+
 if(!isset($modulekit_default_includes))
   $modulekit_default_includes=
     array(
