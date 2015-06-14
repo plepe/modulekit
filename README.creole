@@ -10,9 +10,11 @@ Files/directories in every project/module:
 
 * modulekit.php - Definition of the project/module, list of include files, dependencies.
 * inc/ - Include files for this project or if loaded as a submodule
-* modules/ - submodules this project uses
-** base/ - for example the modulekit-base library
-** form/ - or the modulekit-form library
+* lib/ - Included libraries
+** lib/modulekit/ - Included libraries of the modulekit series
+*** base/ - for example the modulekit-base library
+*** form/ - or the modulekit-form library
+* modules/ - submodules this belong to this project
 * modulekit/ - this basic 'modulekit' submodule (the very code you are reading right now)
 
 Therefore files in the root directory of the project/module will be ignored by modulekit; you can have example-code there and a README or the index.php of your project. It even allows you to use your project as submodule for another project.
@@ -63,6 +65,9 @@ $include['js']=array(
 $include['css']=array(
   "inc/a_css_file.css",
 );
+
+// optional: directories which will be searched for submodules
+#$modules_path = array("modules", "lib/modulekit");
 }}}
 
 Example-code for an index.php-file:
@@ -90,8 +95,8 @@ Example-code for an index.php-file:
 === Adding additional submodules ===
 If you want to add an additional submodule run the following commands:
 {{{
-git submodule add https://github.com/plepe/modulekit-form.git modules/form
-git add .gitmodules modules/form
+git submodule add https://github.com/plepe/modulekit-form.git lib/modulekit/form
+git add .gitmodules lib/modulekit/form
 git commit
 }}}
 

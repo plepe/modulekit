@@ -214,7 +214,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
     $data['depend']=$depend;
 
   if(!array_key_exists('modules_path', $data))
-    $data['modules_path']="modules";
+    $data['modules_path']=array("modules", "lib/modulekit");
 
   if(!isset($include)) {
     if((array_key_exists('default_include', $parent) && ($parent['default_include']!=null)))
@@ -237,12 +237,19 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
   $modulekit['modules'][$module]=$data;
 
-  if(($data['modules_path']!==null)&&
-     @is_dir("{$modulekit_root}{$path}{$data['modules_path']}")) {
-    if($data['modules_path']==".")
+  if($data['modules_path']===null)
+    $data['modules_path']=array();
+  if(is_string($data['modules_path']))
+    $data['modules_path']=array($data['modules_path']);
+
+  foreach($data['modules_path'] as $modules_path) {
+    if(!@is_dir("{$modulekit_root}{$path}{$modules_path}"))
+      continue;
+
+    if($modules_path==".")
       $modules_dir_path=$path;
     else
-      $modules_dir_path="{$path}{$data['modules_path']}/";
+      $modules_dir_path="{$path}{$modules_path}/";
     $modules_dir=opendir("{$modulekit_root}{$modules_dir_path}");
 
     while($module=readdir($modules_dir)) {
