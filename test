@@ -1,5 +1,5 @@
 #!/usr/bin/php
-<?
+<?php
 # Make output of this script pipeable to other programs (like less)
 exec("stty cbreak");
 
