@@ -32,6 +32,10 @@ class page_modules extends page {
       }
     }
 
+    uasort($form_def['load']['values'], function($a, $b) {
+      return strtolower($a['name']) < strtolower($b['name']) ? -1 : 1;
+    });
+
     $form = new form("data", $form_def);
 
     if($form->is_complete()) {
