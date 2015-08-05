@@ -83,12 +83,13 @@ class page_modules extends page {
       $data = $form->save_data();
       $modulekit['config'] = $data['json'];
 
-      if(modulekit_save_config() === true)
+      if(modulekit_save_config() === true) {
 	messages_add("Modules list updated.", MSG_NOTICE);
-      else
-	messages_add("An error occured when updating module list.", MSG_NOTICE);
-
-      reload();
+	reload();
+      }
+      else {
+	messages_add("An error occured when updating module list.", MSG_ERROR);
+      }
     }
 
     if($form->is_empty()) {
