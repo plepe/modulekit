@@ -548,11 +548,14 @@ function modulekit_clear_cache() {
 
 function modulekit_load_config() {
   global $modulekit;
-  $file = dirname(__FILE__)."/config";
+  global $modulekit_config_file;
+
+  if(!isset($modulekit_config_file))
+    $modulekit_config_file = dirname(__FILE__)."/config";
 
   $modulekit['config'] = array();
-  if(file_exists($file)) {
-    $modulekit['config'] = @json_decode(file_get_contents($file), true);
+  if(file_exists($modulekit_config_file)) {
+    $modulekit['config'] = @json_decode(file_get_contents($modulekit_config_file), true);
 
     if(!$modulekit['config'])
       $modulekit['config'] = array();
@@ -566,9 +569,12 @@ function modulekit_load_config() {
 
 function modulekit_save_config() {
   global $modulekit;
-  $file = dirname(__FILE__)."/config";
+  global $modulekit_config_file;
 
-  $r = file_put_contents($file, json_encode($modulekit['config']));
+  if(!isset($modulekit_config_file))
+    $modulekit_config_file = dirname(__FILE__)."/config";
+
+  $r = file_put_contents($modulekit_config_file, json_encode($modulekit['config']));
 
   if($r === false)
     return false;
@@ -578,9 +584,12 @@ function modulekit_save_config() {
 
 function modulekit_config_writable() {
   global $modulekit;
-  $file = dirname(__FILE__)."/config";
+  global $modulekit_config_file;
 
-  return is_writable($file);
+  if(!isset($modulekit_config_file))
+    $modulekit_config_file = dirname(__FILE__)."/config";
+
+  return is_writable($modulekit_config_file);
 }
 
 # No additional modules? Set to empty array
