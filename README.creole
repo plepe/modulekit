@@ -91,6 +91,7 @@ Example-code for an index.php-file:
 ** You can override the default $include setting by defining a $default_include, e.g. $default_include=array('foo'=>array("inc/*.foo")) which will be valid for all (child) modules not setting a $include setting
 * You can define additional indexes for the $include (resp. $default_include) array. To load all files belonging to a specific index define a variable $modulekit_include_php with the index as value before including "modulekit/loader.php", resp. pass it as first argument to modulekit_include_js() resp. modulekit_include_css().
 * You may define a variable $modulekit_load, which contains a list of modules to load (per default only those where a dependency of the main project is found will be loaded).
+* You may override $modulekit_root and $modulekit_root_relative.
 
 === Adding additional submodules ===
 If you want to add an additional submodule run the following commands:
