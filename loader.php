@@ -265,15 +265,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
   global $modulekit;
   global $modulekit_root;
 
-  // check if modulekit config is already loaded
-  if(array_key_exists($module, $modulekit['aliases'])) {
-    $real_module_name = $modulekit['aliases'][$module];
-
-    $data = $modulekit['modules'][$real_module_name];
-  }
-  else {
-    $data = modulekit_load_module_config($module, $path, $parent);
-  }
+  $data = modulekit_load_module_config($module, $path, $parent);
 
   if($data['modules_path']===null)
     $data['modules_path']=array();
