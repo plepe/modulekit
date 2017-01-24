@@ -235,7 +235,18 @@ function modulekit_load_module_config($module, $path, $parent=array()) {
   if(isset($include_css))
     $data['include']['css']=$include_css;
 
-  $modulekit['modules'][$module]=$data;
+  if (array_key_exists($module, $modulekit['modules'])) {
+    for ($i = 0; $i < 100; $i++) {
+      if (!array_key_exists("{$module}{$i}", $modulekit['modules'])) {
+        $data['id'] = "{$module}{$i}";
+        $modulekit['modules']["{$module}{$i}"] = $data;
+        break;
+      }
+    }
+  }
+  else {
+    $modulekit['modules'][$module]=$data;
+  }
 
   return $data;
 }
