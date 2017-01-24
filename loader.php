@@ -214,7 +214,7 @@ function modulekit_load_module_config($module, $path, $parent=array()) {
     $data['depend']=$depend;
 
   if(!array_key_exists('modules_path', $data))
-    $data['modules_path']=array("modules", "lib/modulekit", "modulekit");
+    $data['modules_path']=array("modules", "lib/modulekit", "modulekit", "node_modules");
 
   if(!isset($include)) {
     if((array_key_exists('default_include', $parent) && ($parent['default_include']!=null)))
