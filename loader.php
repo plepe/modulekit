@@ -302,6 +302,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
 
 function modulekit_choose_alternative($module, $version_constraint=null) {
   global $modulekit;
+  $error = array();
 
   if(!isset($modulekit['alternatives'][$module]))
     throw new Exception("Can't resolve dependencies: '$module' not defined.");
@@ -309,12 +310,17 @@ function modulekit_choose_alternative($module, $version_constraint=null) {
   foreach($modulekit['alternatives'][$module] as $a) {
     // has error -> ignore
     if (isset($modulekit['modules'][$a]['error'])) {
-      $error = $modulekit['modules'][$a]['error'];
+      $error[] = "Module '{$a}': {$modulekit['modules'][$a]['error']}";
       continue;
     }
 
     if ($version_constraint) {
-      $check_version = modulekit_check_version($modulekit['modules'][$module]['version'], $version_constraint);
+      $check_version = modulekit_check_version($modulekit['modules'][$a]['version'], $version_constraint);
+
+      if ($check_version !== true) {
+        $error[] = "Module '{$a}': $check_version";
+        continue;
+      }
     }
 
     foreach ($modulekit['modules'][$a]['aliases'] as $m) {
@@ -324,12 +330,14 @@ function modulekit_choose_alternative($module, $version_constraint=null) {
     return $a;
   }
 
-  if ($error)
-    throw new Exception($error);
-  else if ($version_constraint)
-    throw new Exception("Can't resolve dependencies: '$module' (version $version_constraint) not defined.");
+  $name = "'$module'";
+  if ($version_constraint)
+    $name = "'{$module}' (version $version)";
+
+  if (sizeof($error))
+    throw new Exception("No modules satisfy {$name}:\n" . implode("\n", $error) . "\n");
   else
-    throw new Exception("Can't resolve dependencies: '$module' not defined.");
+    throw new Exception("Can't resolve dependency $name: no module found.");
 }
 
 function modulekit_resolve_depend($module, $version, &$done) {
