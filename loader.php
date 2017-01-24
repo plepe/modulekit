@@ -238,10 +238,12 @@ function modulekit_load_module_config($module, $path, $parent=array()) {
   if(isset($include_css))
     $data['include']['css']=$include_css;
 
+  $data['aliases'] = array_unique($aliases);
+
   if (array_key_exists($module, $modulekit['modules'])) {
     for ($i = 0; $i < 100; $i++) {
       if (!array_key_exists("{$module}{$i}", $modulekit['modules'])) {
-        $aliases[] = "{$module}{$i}";
+        $data['aliases'][] = "{$module}{$i}";
         $data['id'] = "{$module}{$i}";
         $modulekit['modules']["{$module}{$i}"] = $data;
         break;
@@ -252,13 +254,12 @@ function modulekit_load_module_config($module, $path, $parent=array()) {
     $modulekit['modules'][$module]=$data;
   }
 
-  $aliases = array_unique($aliases);
-  foreach ($aliases as $a) {
-    if (!array_key_exists($a, $modulekit['aliases'])) {
-      $modulekit['aliases'][$a] = array();
+  foreach ($data['aliases'] as $a) {
+    if (!array_key_exists($a, $modulekit['alternatives'])) {
+      $modulekit['alternatives'][$a] = array();
     }
 
-    $modulekit['aliases'][$a][] = $data['id'];
+    $modulekit['alternatives'][$a][] = $data['id'];
   }
 
   return $data;
@@ -302,10 +303,10 @@ function modulekit_load_module($module, $path, $parent=array()) {
 function modulekit_choose_alternative($module, $version_constraint=null) {
   global $modulekit;
 
-  if(!isset($modulekit['aliases'][$module]))
+  if(!isset($modulekit['alternatives'][$module]))
     throw new Exception("Can't resolve dependencies: '$module' not defined.");
 
-  foreach($modulekit['aliases'][$module] as $a) {
+  foreach($modulekit['alternatives'][$module] as $a) {
     // has error -> ignore
     if (isset($modulekit['modules'][$a]['error'])) {
       $error = $modulekit['modules'][$a]['error'];
@@ -314,6 +315,10 @@ function modulekit_choose_alternative($module, $version_constraint=null) {
 
     if ($version_constraint) {
       $check_version = modulekit_check_version($modulekit['modules'][$module]['version'], $version_constraint);
+    }
+
+    foreach ($modulekit['modules'][$a]['aliases'] as $m) {
+      $modulekit['aliases'][$m] = $a;
     }
 
     return $a;
@@ -713,6 +718,7 @@ if(!isset($modulekit)) {
 
   $modulekit=array(
     'modules'	=>array(),
+    'alternatives'=>array(),
     'order'	=>array(),
     'aliases'	=>array(),
     'load'	=>array_merge($modulekit_load, $modulekit['config']['load']),
