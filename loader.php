@@ -366,6 +366,10 @@ function modulekit_get_includes($type) {
   $list=array();
 
   foreach($modulekit['order'] as $m) {
+    if(isset($modulekit['modules'][$m]['error'])) {
+      throw new Exception($modulekit['modules'][$m]['error']);
+    }
+
     if(isset($modulekit['modules'][$m]['include'][$type]))
       foreach($modulekit['modules'][$m]['include'][$type] as $f) {
 	$list[]=modulekit_file($m, $f);

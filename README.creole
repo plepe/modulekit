@@ -70,6 +70,9 @@ $include['css']=array(
 #$modules_path = array("modules", "lib/modulekit");
 }}}
 
+// optional: $error. If $error is set, this module can't be loaded and an exception with the message will be thrown. (e.g. for modules which have been out sourced to a separate repository).
+#$error = "message";
+
 Example-code for an index.php-file:
 {{{
 <?php include "conf.php"; /* load a local configuration */ ?>
