@@ -296,31 +296,38 @@ function modulekit_load_module($module, $path, $parent=array()) {
   return $data;
 }
 
-function modulekit_choose_alternative($module) {
+function modulekit_choose_alternative($module, $version_constraint=null) {
   global $modulekit;
 
   if(!isset($modulekit['aliases'][$module]))
     throw new Exception("Can't resolve dependencies: '$module' not defined.");
 
-  $alternatives = $modulekit['aliases'][$module];
-  if(sizeof($alternatives) === 1) {
-    return $alternatives[0];
-  }
-
-  foreach($alternatives as $a) {
+  foreach($modulekit['aliases'][$module] as $a) {
     // has error -> ignore
     if (isset($modulekit['modules'][$a]['error'])) {
+      $error = $modulekit['modules'][$a]['error'];
       continue;
+    }
+
+    if ($version_constraint) {
+      $check_version = modulekit_check_version($modulekit['modules'][$module]['version'], $version_constraint);
     }
 
     return $a;
   }
+
+  if ($error)
+    throw new Exception($error);
+  else if ($version_constraint)
+    throw new Exception("Can't resolve dependencies: '$module' (version $version_constraint) not defined.");
+  else
+    throw new Exception("Can't resolve dependencies: '$module' not defined.");
 }
 
-function modulekit_resolve_depend($module, &$done) {
+function modulekit_resolve_depend($module, $version, &$done) {
   global $modulekit;
 
-  $module = modulekit_choose_alternative($module);
+  $module = modulekit_choose_alternative($module, $version);
 
   $done[]=$module;
 
@@ -334,12 +341,7 @@ function modulekit_resolve_depend($module, &$done) {
       }
 
       if(!in_array($m, $done))
-	$m = modulekit_resolve_depend($m, $done);
-
-      $check_version=modulekit_check_version($modulekit['modules'][$m]['version'], $version_constraint);
-      if($check_version!==true) {
-	throw new Exception("Can't resolve dependencies: {$check_version} of module '$m'");
-      }
+	$m = modulekit_resolve_depend($m, $version_constraint, $done);
     }
 
   if(!in_array($data['id'], $modulekit['order']))
@@ -348,7 +350,7 @@ function modulekit_resolve_depend($module, &$done) {
   if(isset($data['load'])&&is_array($data['load']))
     foreach($data['load'] as $m)
       if(!in_array($m, $done))
-        modulekit_resolve_depend($m, $done);
+        modulekit_resolve_depend($m, null, $done);
 
   return $module;
 }
@@ -425,9 +427,9 @@ function modulekit_load($additional) {
   modulekit_load_module("modulekit", "modulekit/");
 
   $resolve_done=array();
-  modulekit_resolve_depend("", $resolve_done);
+  modulekit_resolve_depend("", null, $resolve_done);
   foreach($additional as $add)
-    modulekit_resolve_depend($add, $resolve_done);
+    modulekit_resolve_depend($add, null, $resolve_done);
 }
 
 function modulekit_loaded($module) {
