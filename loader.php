@@ -177,7 +177,10 @@ function modulekit_load_module_config($module, $path, $parent=array()) {
   foreach(array("modulekit", "modulekit_root", "data", "module", "parent") as $k)
     unset($data[$k]);
 
-  $aliases = array($module);
+  if(isset($aliases))
+    $aliases[] = $module;
+  else
+    $aliases = array($module);
 
   if(isset($name))
     $data['name']=$name;

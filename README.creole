@@ -35,6 +35,9 @@ $name="Name of this project/module";
 // an ID to identify this module
 $id="id";
 
+// optional: alias names
+$aliases=array("ID", "Id");
+
 // An optional description
 $description="This module does this or that.";
 
