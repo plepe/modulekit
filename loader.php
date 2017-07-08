@@ -25,54 +25,21 @@ function modulekit_debug($text, $level) {
     file_put_contents("php://stderr", "modulekit(L$level): $text\n");
 }
 
-function modulekit_read_inc_files($basepath, $path="") {
+function modulekit_process_inc_files($basepath, $include) {
   global $modulekit_root;
 
-  $list=array();
-
-  if(!@is_dir("{$modulekit_root}{$basepath}/{$path}"))
-    return array();
-
-  $d=opendir("{$modulekit_root}{$basepath}/{$path}");
-  while($f=readdir($d)) {
-    if(substr($f, 0, 1)==".");
-    elseif(@is_dir("{$modulekit_root}{$basepath}/{$path}{$f}")) {
-      $list=array_merge($list, modulekit_read_inc_files($basepath, "{$path}{$f}/"));
-    }
-    else {
-      $list[]="{$path}{$f}";
-    }
-  }
-  closedir($d);
-
-  return $list;
-}
-
-function modulekit_files_match($files, $entry) {
-  $entry="/^".strtr($entry, array(
-    "."=>"\\.",
-    "*"=>"[^\\/]*",
-    "+"=>"\\+",
-    "/"=>"\\/",
-    "?"=>"[^\\/]",
-  ))."$/";
-
-  return preg_grep($entry, $files);
-}
-
-function modulekit_process_inc_files($basepath, $include) {
   $ret=array();
 
-  $files=modulekit_read_inc_files($basepath, "");
-
   foreach($include as $type=>$list) {
-    $f=array();
+    $ret[$type] = array();
 
-    foreach($list as $entry) {
-      $f=array_merge($f, modulekit_files_match($files, $entry));
+    foreach ($list as $type_list) {
+      $f = popen("cd " . escapeshellarg($modulekit_root . $basepath) . " 2>/dev/null; ls " . escapeshellarg($type_list) . " 2>/dev/null", "r");
+      while ($r = fgets($f)) {
+        $ret[$type][] = trim($r);
+      }
+      fclose($f);
     }
-
-    $ret[$type]=array_unique($f);
   }
 
   return $ret;
