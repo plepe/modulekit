@@ -290,8 +290,9 @@ function modulekit_load_module($module, $path, $parent=array()) {
       if(substr($module, 0, 1)==".")
 	continue;
 
-      if(@is_dir("{$modulekit_root}{$modules_dir_path}{$module}/"))
+      if(@is_dir("{$modulekit_root}{$modules_dir_path}{$module}/") && file_exists("{$modulekit_root}{$modules_dir_path}{$module}/modulekit.php")) {
 	modulekit_load_module($module, "{$modules_dir_path}{$module}/", $data);
+      }
     }
 
     closedir($modules_dir);
