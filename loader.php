@@ -33,13 +33,21 @@ function modulekit_process_inc_files($basepath, $include) {
   foreach($include as $type=>$list) {
     $ret[$type] = array();
 
-    foreach ($list as $type_list) {
-      $f = popen("cd " . escapeshellarg($modulekit_root . $basepath) . " 2>/dev/null; ls " . escapeshellarg($type_list) . " 2>/dev/null", "r");
-      while ($r = fgets($f)) {
-        $ret[$type][] = trim($r);
-      }
-      fclose($f);
+    if (!sizeof($list)) {
+      continue;
     }
+
+    $cmd = "cd " . escapeshellarg($modulekit_root . $basepath) . " 2>/dev/null";
+
+    foreach ($list as $type_list) {
+      $cmd .= "; ls " . escapeshellarg($type_list) . " 2>/dev/null";
+    }
+
+    $f = popen($cmd, "r");
+    while ($r = fgets($f)) {
+      $ret[$type][] = trim($r);
+    }
+    fclose($f);
   }
 
   return $ret;
