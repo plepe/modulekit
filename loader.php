@@ -40,7 +40,7 @@ function modulekit_process_inc_files($basepath, $include) {
     $cmd = "cd " . escapeshellarg($modulekit_root . $basepath) . " 2>/dev/null";
 
     foreach ($list as $type_list) {
-      $cmd .= "; ls " . escapeshellarg($type_list) . " 2>/dev/null";
+      $cmd .= "; ls {$type_list} 2>/dev/null";
     }
 
     $f = popen($cmd, "r");
