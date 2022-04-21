@@ -404,6 +404,8 @@ function modulekit_loaded($module) {
 
 function modulekit_pack_include_files($type, $mode=null) {
   global $modulekit;
+  global $modulekit_root;
+  global $modulekit_root_relative;
   global $modulekit_cache_dir;
 
   if(!$mode)
@@ -414,12 +416,20 @@ function modulekit_pack_include_files($type, $mode=null) {
   @unlink("{$modulekit_cache_dir}{$filename}");
   $f=fopen("{$modulekit_cache_dir}{$filename}", "w");
 
+  // end of file
+  switch($mode) {
+    case "php":
+      fwrite($f, "<"."?php\n");
+    default:
+  }
+
   // Concatenate all Javascript files into one
   foreach(modulekit_get_includes($type) as $file) {
     // beginning of file
     switch($mode) {
       case "php":
-        fwrite($f, "<"."?php /* FILE {$file} */ ?".">\n");
+        $file_name = substr($file, strlen($modulekit_root_relative)); // crop relative path from file name
+        fwrite($f, "require_once \"{$modulekit_root}{$file_name}\";\n");
 	break;
       case "js":
       case "css":
@@ -429,18 +439,12 @@ function modulekit_pack_include_files($type, $mode=null) {
     }
 
     // content of file
-    fwrite($f, $content=file_get_contents($file));
+    if ($mode !== 'php') {
+      fwrite($f, $content=file_get_contents($file));
+    }
 
     // end of file
     switch($mode) {
-      case "php":
-	// make sure every file ends with a php closing tag
-	$last_begin_tag=strrpos($content, "<"."?");
-	$last_end_tag=strrpos($content, "?".">");
-	if(($last_begin_tag!==false)&&
-	  (($last_end_tag===false)||($last_end_tag<$last_begin_tag)))
-	  fwrite($f, "?".">\n");
-        break;
       default:
     }
   }
