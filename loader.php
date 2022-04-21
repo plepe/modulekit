@@ -254,7 +254,7 @@ function modulekit_load_module($module, $path, $parent=array()) {
     $data = modulekit_load_module_config($module, $path, $parent);
   }
 
-  if($data['modules_path']===null)
+  if(!isset($data['modules_path']) || $data['modules_path']===null)
     $data['modules_path']=array();
   if(is_string($data['modules_path']))
     $data['modules_path']=array($data['modules_path']);
